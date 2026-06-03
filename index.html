@@ -1,0 +1,1112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eng001 by Muhammad Moeez</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        background: #0f172a;
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .quiz-box {
+        width: 100%;
+        max-width: 900px;
+        background: #1e293b;
+        padding: 30px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #38bdf8;
+      }
+
+      #questionNumber {
+        margin-bottom: 10px;
+        color: #94a3b8;
+      }
+
+      #question {
+        font-size: 24px;
+        line-height: 1.5;
+        margin-bottom: 25px;
+      }
+
+      .option {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 10px;
+        background: #334155;
+        color: white;
+        font-size: 16px;
+        text-align: left;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .option:hover {
+        background: #475569;
+      }
+
+      .selected {
+        background: #0ea5e9 !important;
+      }
+
+      .correct {
+        background: #16a34a !important;
+      }
+
+      .wrong {
+        background: #dc2626 !important;
+      }
+
+      #nextBtn,
+      #submitBtn,
+      #showResultBtn {
+        margin-top: 20px;
+        padding: 14px 25px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+      }
+
+      #nextBtn {
+        background: #0ea5e9;
+      }
+
+      #submitBtn {
+        background: #22c55e;
+        display: none;
+      }
+
+      #showResultBtn {
+        background: #f59e0b;
+        display: none;
+      }
+
+      #resultBox {
+        margin-top: 25px;
+        text-align: center;
+        font-size: 28px;
+      }
+      .header {
+        width: 100%;
+        background: #1e293b;
+        padding: 18px 30px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+      }
+
+      .nav-list {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .nav-list li a {
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        transition: 0.3s;
+      }
+
+      .nav-list li a:hover {
+        color: #38bdf8;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .header {
+          padding: 15px 20px;
+        }
+
+        .nav-list li a {
+          font-size: 18px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header {
+          padding: 12px 15px;
+        }
+
+        .nav-list li a {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="quiz-box">
+      <header class="header">
+        <nav>
+          <ul class="nav-list">
+            <li>
+              <a href="./Past Quiz/index.html">"Past Quiz"</a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <h1>Eng001 Handouts Quiz</h1>
+
+      <div id="quizArea">
+        <div id="questionNumber"></div>
+
+        <div id="question"></div>
+
+        <div id="options"></div>
+
+        <button id="nextBtn">Next Question</button>
+
+        <button id="submitBtn">Submit Quiz</button>
+
+        <button id="showResultBtn">Show Result</button>
+
+        <div id="resultBox"></div>
+      </div>
+    </div>
+
+    <script>
+      const quizData = [
+        // ─── LECTURE 1: Introduction to Journalistic Writing ───
+        {
+          question:
+            "According to Donald Norman of Stanford University, what is the most important tool for human advancement?",
+          options: [
+            "The invention of the printing press",
+            "The invention of writing",
+            "The invention of the internet",
+            "The invention of language",
+          ],
+          answer: "The invention of writing",
+        },
+        {
+          question:
+            "Which of the following is NOT listed as a reason why writing is important?",
+          options: [
+            "It is practical",
+            "It is therapeutic",
+            "It is competitive",
+            "It is stimulating",
+          ],
+          answer: "It is competitive",
+        },
+        {
+          question:
+            "Writing is described as 'therapeutic' because it helps people to:",
+          options: [
+            "Improve their grammar skills",
+            "Express feelings that cannot be expressed easily by speaking",
+            "Earn money through freelancing",
+            "Pass examinations",
+          ],
+          answer:
+            "Express feelings that cannot be expressed easily by speaking",
+        },
+        {
+          question:
+            "According to Lecture 1, writing is 'stimulating' because it helps to:",
+          options: [
+            "Entertain the reader",
+            "Provoke thoughts and organize them logically and concisely",
+            "Create job opportunities",
+            "Build social relationships",
+          ],
+          answer: "Provoke thoughts and organize them logically and concisely",
+        },
+        {
+          question:
+            "Which of the following is identified as a core requirement for writing well?",
+          options: [
+            "Fluency in multiple languages",
+            "Clear thinking",
+            "A large vocabulary",
+            "Access to a library",
+          ],
+          answer: "Clear thinking",
+        },
+        {
+          question:
+            "According to research cited in Lecture 1, student writing typically lacks which qualities?",
+          options: [
+            "Speed, accuracy, and neatness",
+            "Creativity, imagination, and humor",
+            "Clarity, coherence, and organization",
+            "Length, detail, and vocabulary",
+          ],
+          answer: "Clarity, coherence, and organization",
+        },
+        {
+          question:
+            "Writing is described as 'a final stage in the complex process of communication' that begins with:",
+          options: ["Reading", "Thinking", "Speaking", "Listening"],
+          answer: "Thinking",
+        },
+        {
+          question:
+            "Which activity is recommended in Lecture 1 as 'an excellent writing practice as well as a good outlet for venting feelings'?",
+          options: [
+            "Copying poems",
+            "Keeping a journal",
+            "Playing word games",
+            "Making lists",
+          ],
+          answer: "Keeping a journal",
+        },
+        {
+          question:
+            "According to Lecture 1, what is a key difference between speech and writing regarding instruction?",
+          options: [
+            "Writing is natural, while speech requires practice",
+            "Speech requires systematic instruction while writing does not",
+            "Unlike speech, writing requires systematic instruction and practice",
+            "Both speech and writing are acquired naturally",
+          ],
+          answer:
+            "Unlike speech, writing requires systematic instruction and practice",
+        },
+        {
+          question:
+            "Which of the following is a characteristic of SPEECH as compared to writing?",
+          options: [
+            "It follows standardized grammar",
+            "It uses more complex sentences",
+            "It is often spontaneous and unplanned",
+            "It relies on words on the page to express meaning",
+          ],
+          answer: "It is often spontaneous and unplanned",
+        },
+        {
+          question:
+            "Which of the following is a feature of WRITING as compared to speech?",
+          options: [
+            "Writers use simpler sentences connected by 'and' and 'but'",
+            "Writers have immediate audiences who react in real time",
+            "Writing is more formal and progresses more logically",
+            "Writers rely on pitch and rhythm to communicate",
+          ],
+          answer: "Writing is more formal and progresses more logically",
+        },
+        {
+          question:
+            "Which connecting words are MORE associated with writing than with informal speech?",
+          options: [
+            "'And', 'but', 'so'",
+            "'However', 'although', 'in addition'",
+            "'Well', 'you know', 'like'",
+            "'Then', 'next', 'after'",
+          ],
+          answer: "'However', 'although', 'in addition'",
+        },
+        {
+          question:
+            "According to Lecture 1, writers have only one opportunity to convey their message because:",
+          options: [
+            "Readers are always too busy to read twice",
+            "Writers have a delayed response from audiences or none at all",
+            "Writing is always too long to re-read",
+            "Editors do not allow rewrites",
+          ],
+          answer:
+            "Writers have a delayed response from audiences or none at all",
+        },
+        {
+          question: "The 'Brainstorm' pointer in Lecture 1 advises writers to:",
+          options: [
+            "Write only about academic topics",
+            "Brainstorm as much as possible about impressions and describe people and events",
+            "Copy text from published books",
+            "Avoid writing about personal experiences",
+          ],
+          answer:
+            "Brainstorm as much as possible about impressions and describe people and events",
+        },
+        {
+          question:
+            "According to Lecture 1, which of the following is NOT a reason for writing?",
+          options: [
+            "Sending messages",
+            "Keeping records",
+            "Winning debates",
+            "Expressing feelings",
+          ],
+          answer: "Winning debates",
+        },
+
+        // ─── LECTURE 2: Qualities of Good Writers ───
+        {
+          question:
+            "According to Friedrich Nietzsche, good writers would rather be:",
+          options: [
+            "Famous than read",
+            "Understood than admired",
+            "Admired than accurate",
+            "Read than revised",
+          ],
+          answer: "Understood than admired",
+        },
+        {
+          question:
+            "Which quality refers to a writer's ability to adapt their message to sensitive or non-sensitive situations?",
+          options: [
+            "Persuasion",
+            "Context sensitivity",
+            "Creativity",
+            "Accuracy",
+          ],
+          answer: "Context sensitivity",
+        },
+        {
+          question:
+            "A writer who 'knows their readers' needs' and understands how much content is needed for 'skimmers' and 'skeptics' is demonstrating which quality?",
+          options: ["Precision", "Consideration", "Courtesy", "Conciseness"],
+          answer: "Consideration",
+        },
+        {
+          question:
+            "According to Lecture 2, what are the four important communication ingredients for the success of a message?",
+          options: [
+            "Style, tone, length, audience",
+            "Social contact, common medium, transmission, and understanding",
+            "Grammar, vocabulary, punctuation, and clarity",
+            "Research, drafting, revising, and proofreading",
+          ],
+          answer:
+            "Social contact, common medium, transmission, and understanding",
+        },
+        {
+          question:
+            "The quality that allows a writer to 'find the best available means of moving a specific audience in a specific situation to a specific decision' is:",
+          options: [
+            "Research skills",
+            "Persuasion",
+            "Interviewing skills",
+            "Ethics",
+          ],
+          answer: "Persuasion",
+        },
+        {
+          question:
+            "A journalist who uses third-person reporting and an objective tone is primarily targeting which audience medium?",
+          options: [
+            "A blog",
+            "A personal letter",
+            "A newspaper",
+            "A social media post",
+          ],
+          answer: "A newspaper",
+        },
+        {
+          question:
+            "Which quality of a good writer involves choosing words carefully to ensure work is accurate and meets ethical standards?",
+          options: [
+            "Creativity",
+            "A sense of ethics and accuracy",
+            "Research skills",
+            "Specific subject knowledge",
+          ],
+          answer: "A sense of ethics and accuracy",
+        },
+        {
+          question:
+            "Which of the following is NOT listed as a quality that newspaper journalists need in Lecture 2?",
+          options: [
+            "An ability to work under pressure to meet deadlines",
+            "Determination and persistence",
+            "A willingness to accept irregular hours",
+            "A formal university degree in journalism",
+          ],
+          answer: "A formal university degree in journalism",
+        },
+        {
+          question:
+            "Great writers who 'can write well in a variety of formats, including technical, persuasive, and descriptive prose' demonstrate which quality?",
+          options: [
+            "Specific subject knowledge",
+            "Interviewing skills",
+            "Ability to write well in different styles",
+            "A good grasp of grammar",
+          ],
+          answer: "Ability to write well in different styles",
+        },
+        {
+          question: "According to Lecture 2, all journalists are essentially:",
+          options: [
+            "Good researchers",
+            "Good communicators",
+            "Good storytellers",
+            "Good editors",
+          ],
+          answer: "Good communicators",
+        },
+        {
+          question:
+            "A writer who 'lives in a world of reality and reflects the same truth in their writing' is exhibiting which quality?",
+          options: [
+            "Persuasion",
+            "Creativity",
+            "Dream and Reality",
+            "Context sensitivity",
+          ],
+          answer: "Dream and Reality",
+        },
+
+        // ─── LECTURE 3: Qualities of Good Writers (continued) ───
+        {
+          question:
+            "In Lecture 3, the airline announcement example (explaining headwinds and fuel diversion) is used to illustrate which quality of a good writer?",
+          options: [
+            "Conciseness",
+            "Correctness",
+            "Consideration",
+            "Credibility",
+          ],
+          answer: "Consideration",
+        },
+        {
+          question:
+            "A good writer who is 'highly investigative' seeks to answer at minimum the questions: Who, What, Where, When, Why, and:",
+          options: ["Which", "Whom", "How", "Whether"],
+          answer: "How",
+        },
+        {
+          question:
+            "The principle 'a message sent is not a message received' relates to which quality of a good writer in Lecture 3?",
+          options: [
+            "Persuasion",
+            "Dream and Reality",
+            "Investigation",
+            "Knowledge of medium",
+          ],
+          answer: "Dream and Reality",
+        },
+        {
+          question:
+            "In the plumber-specialist example of Lecture 3, the specialist's message failed because he used language that was:",
+          options: [
+            "Too short and informal",
+            "Too technical and incompatible with the plumber's reception level",
+            "Grammatically incorrect",
+            "Lacking in facts",
+          ],
+          answer:
+            "Too technical and incompatible with the plumber's reception level",
+        },
+        {
+          question:
+            "Which of the following is a component of 'Dream and Reality' (communication success) in Lecture 3?",
+          options: [
+            "Social Contact",
+            "Creative writing",
+            "Word count",
+            "Sentence variety",
+          ],
+          answer: "Social Contact",
+        },
+        {
+          question:
+            "A good writer who 'collects all information about their readers and then prepares a game plan' is demonstrating which quality?",
+          options: [
+            "Persuasion",
+            "Investigation",
+            "Knowing internal biases and shaping perceptions",
+            "Dream and Reality",
+          ],
+          answer: "Knowing internal biases and shaping perceptions",
+        },
+        {
+          question:
+            "According to Lecture 3, good writers use 'rhetorical devices' primarily to:",
+          options: [
+            "Increase word count",
+            "Influence their readers and exhibit standard behavior",
+            "Improve their grammar",
+            "Entertain without informing",
+          ],
+          answer: "Influence their readers and exhibit standard behavior",
+        },
+        {
+          question:
+            "In the 'Common Medium' component of communication, both parties must share:",
+          options: [
+            "A common goal",
+            "A common language or means of communication",
+            "A common educational background",
+            "A common writing style",
+          ],
+          answer: "A common language or means of communication",
+        },
+        {
+          question:
+            "The quality 'Knowledge of medium' means that good writers use language:",
+          options: [
+            "In the most formal and academic manner possible",
+            "According to the reception level of their readers and in the most effective manner",
+            "Only in digital formats for wider reach",
+            "With the maximum number of words to cover all details",
+          ],
+          answer:
+            "According to the reception level of their readers and in the most effective manner",
+        },
+
+        // ─── LECTURE 4: Qualities of Good Writing ───
+        {
+          question:
+            "According to H. W. Fowler's 'The King's English', a writer should prefer which type of word?",
+          options: [
+            "The abstract word to the concrete",
+            "The far-fetched word to the familiar",
+            "The familiar word to the far-fetched",
+            "The long word to the short",
+          ],
+          answer: "The familiar word to the far-fetched",
+        },
+        {
+          question:
+            "William Zinsser's 'On Writing Well' states that the secret of good writing is to:",
+          options: [
+            "Add as many descriptive adverbs as possible",
+            "Use passive constructions for variety",
+            "Strip every sentence to its cleanest components",
+            "Prefer long, complex words to show expertise",
+          ],
+          answer: "Strip every sentence to its cleanest components",
+        },
+        {
+          question:
+            "According to Lecture 4, which of the following is the pretentious equivalent of the familiar word 'pay'?",
+          options: ["Circa", "Utilization", "Remuneration", "Promulgate"],
+          answer: "Remuneration",
+        },
+        {
+          question:
+            "The Average Sentence Length (ASL) recommended for good writing in Lecture 4 is:",
+          options: [
+            "5 to 10 words",
+            "10 to 15 words",
+            "17 to 20 words",
+            "25 to 30 words",
+          ],
+          answer: "17 to 20 words",
+        },
+        {
+          question:
+            "The sentence 'I like Tom, and the Eiffel Tower is in Paris' violates which property of effective sentence construction?",
+          options: ["Length", "Unity", "Coherence", "Emphasis"],
+          answer: "Unity",
+        },
+        {
+          question:
+            "The Fog Index was invented by Robert Gunning in which year?",
+          options: ["1942", "1952", "1962", "1972"],
+          answer: "1952",
+        },
+        {
+          question: "The Fog Index is designed to give:",
+          options: [
+            "The reading speed required for comprehension",
+            "The US school grade necessary for comprehension of text",
+            "The number of syllables in a text",
+            "The percentage of passive sentences in a text",
+          ],
+          answer: "The US school grade necessary for comprehension of text",
+        },
+        {
+          question:
+            "If a text has a Fog Index above 12, what does that indicate?",
+          options: [
+            "The text is very easy to read",
+            "The text is at an elementary reading level",
+            "The text will be difficult to read",
+            "The text is suitable for children",
+          ],
+          answer: "The text will be difficult to read",
+        },
+        {
+          question: "What does the acronym 'SMOG' stand for in the SMOG Index?",
+          options: [
+            "Standard Measure of General Grammar",
+            "Simple Measure of Gobbledygook",
+            "Standard Method of Grammar Grading",
+            "Simple Model of Grammar and Gobbledygook",
+          ],
+          answer: "Simple Measure of Gobbledygook",
+        },
+        {
+          question:
+            "The Flesch Index scale runs from 0 to 100. Which direction indicates increasing ease of readability?",
+          options: [
+            "Lower scores mean easier reading",
+            "Higher scores mean more difficulty",
+            "Higher scores mean increasing ease of readability",
+            "The scale does not relate to readability",
+          ],
+          answer: "Higher scores mean increasing ease of readability",
+        },
+        {
+          question:
+            "Standard writing according to the Flesch Index is described as 17 words per sentence and how many syllables per hundred words?",
+          options: ["100", "120", "147", "175"],
+          answer: "147",
+        },
+        {
+          question:
+            "The PSK (Power-Sumer-Kearl) Index was designed for which type of texts?",
+          options: [
+            "Adult literary texts",
+            "Military communications",
+            "Primary school texts",
+            "Academic research papers",
+          ],
+          answer: "Primary school texts",
+        },
+        {
+          question:
+            "The Sticht Index was designed by the US Army specifically to test:",
+          options: [
+            "Writing proficiency",
+            "Functional literacy",
+            "Reading speed",
+            "Vocabulary range",
+          ],
+          answer: "Functional literacy",
+        },
+        {
+          question:
+            "In Lecture 4, 'tightly structured' writing means that it contains:",
+          options: [
+            "Only short sentences",
+            "Logical or associative connections and transitions which clearly express the relationship of ideas",
+            "No use of pronouns",
+            "Only active voice constructions",
+          ],
+          answer:
+            "Logical or associative connections and transitions which clearly express the relationship of ideas",
+        },
+        {
+          question:
+            "To be 'substantive' in writing, a writer should demonstrate:",
+          options: [
+            "Use of very short sentences",
+            "Awareness of the subject's significance and its implications within a specified context",
+            "Use of figurative language only",
+            "Avoidance of all technical terms",
+          ],
+          answer:
+            "Awareness of the subject's significance and its implications within a specified context",
+        },
+        {
+          question:
+            "According to Lecture 4, 'interesting' writing should engage readers through:",
+          options: [
+            "Clichéd but familiar language",
+            "Original insights and precise, unclichéd language in a 'human' voice",
+            "Long and complex vocabulary",
+            "Repetition of key points for emphasis",
+          ],
+          answer:
+            "Original insights and precise, unclichéd language in a 'human' voice",
+        },
+        {
+          question:
+            "Before beginning to write, Lecture 4 advises you to 'define your purpose.' Which of these is a valid purpose?",
+          options: [
+            "To lengthen the document",
+            "To inform, persuade, or motivate",
+            "To impress with vocabulary",
+            "To match a competitor's writing style",
+          ],
+          answer: "To inform, persuade, or motivate",
+        },
+        {
+          question:
+            "When constructing effective sentences, 'coherence' in Lecture 4 means:",
+          options: [
+            "All sentences must be the same length",
+            "Sentences must logically connect to each other and avoid dangling modifiers",
+            "Every sentence must begin with a noun",
+            "Each paragraph must contain exactly five sentences",
+          ],
+          answer:
+            "Sentences must logically connect to each other and avoid dangling modifiers",
+        },
+        {
+          question:
+            "The pretentious equivalent of the familiar word 'about' listed in Lecture 4 is:",
+          options: ["Subsequent", "Circa", "Promulgate", "Inadvertency"],
+          answer: "Circa",
+        },
+        {
+          question:
+            "The general characteristics of good writing listed in Lecture 4 include all of the following EXCEPT:",
+          options: ["Clarity", "Creativity", "Complexity", "Courtesy"],
+          answer: "Complexity",
+        },
+        {
+          question:
+            "Which visual aids are mentioned in Lecture 4 to make writing 'easy to go through'?",
+          options: [
+            "Footnotes and endnotes only",
+            "Headlines, tabulations, itemization, pictures, and charts",
+            "Long paragraphs with no breaks",
+            "Only photographs",
+          ],
+          answer: "Headlines, tabulations, itemization, pictures, and charts",
+        },
+
+        // ─── LECTURE 5: Qualities of Good Writing II ───
+        {
+          question:
+            "According to Lecture 5, a writer who is 'Be complete' must ensure they:",
+          options: [
+            "Use as many words as possible",
+            "Include all the necessary facts and background information to support the message",
+            "Always write more than 500 words",
+            "Repeat the main point in every paragraph",
+          ],
+          answer:
+            "Include all the necessary facts and background information to support the message",
+        },
+        {
+          question:
+            "Which check question is associated with the quality 'Be complete' in Lecture 5?",
+          options: [
+            "Have you plunged right into the subject?",
+            "Have you used pleasant-toned words?",
+            "Have you covered the essentials?",
+            "Have you made the details razor-sharp?",
+          ],
+          answer: "Have you covered the essentials?",
+        },
+        {
+          question: "The quality 'Be concise' in Lecture 5 advises writers to:",
+          options: [
+            "Write as many words as needed to fully explain the topic",
+            "Convey the information as quickly and easily as possible, avoiding needless filler words",
+            "Always use bullet points instead of paragraphs",
+            "Repeat the key message three times for emphasis",
+          ],
+          answer:
+            "Convey the information as quickly and easily as possible, avoiding needless filler words",
+        },
+        {
+          question: "A check question for 'Be concise' in Lecture 5 asks:",
+          options: [
+            "Have you used 'I appreciate,' 'please,' and 'thank you'?",
+            "Have you avoided needless 'filler' words and phrases?",
+            "Have you checked all facts for correctness?",
+            "Have you floodlighted the client's interests?",
+          ],
+          answer: "Have you avoided needless 'filler' words and phrases?",
+        },
+        {
+          question: "According to Lecture 5, 'Be creative' involves:",
+          options: [
+            "Only writing in a narrative format",
+            "Using different formats such as Q&A, graphics, or idealists to communicate your message",
+            "Avoiding all visual aids",
+            "Writing only in first person",
+          ],
+          answer:
+            "Using different formats such as Q&A, graphics, or idealists to communicate your message",
+        },
+        {
+          question:
+            "The 'Be considerate' quality in Lecture 5 asks writers to check: 'Have you walked in his/her moccasins?' This means the writer should:",
+          options: [
+            "Copy the reader's writing style",
+            "Empathize with and understand the reader's perspective",
+            "Use informal language like the reader",
+            "Write only what the reader wants to hear",
+          ],
+          answer: "Empathize with and understand the reader's perspective",
+        },
+        {
+          question:
+            "Which of the following is a check question under 'Be considerate' in Lecture 5?",
+          options: [
+            "Have you checked all facts for correctness?",
+            "Have you plunged right into the subject?",
+            "Have you floodlighted his/her interests?",
+            "Have you verified all numbers and amounts?",
+          ],
+          answer: "Have you floodlighted his/her interests?",
+        },
+        {
+          question:
+            "The 'Be correct' quality in Lecture 5 includes checking all of the following EXCEPT:",
+          options: [
+            "Spelling the reader's name correctly",
+            "Verifying all numbers and amounts",
+            "Checking spelling, punctuation, and grammar",
+            "Choosing an appropriate Q&A format",
+          ],
+          answer: "Choosing an appropriate Q&A format",
+        },
+        {
+          question:
+            "According to Lecture 5, 'Be credible' means a writer should:",
+          options: [
+            "Use as many sources as possible regardless of quality",
+            "Present themselves from a position of reliability and competence",
+            "Avoid using personal experience as evidence",
+            "Always write under a pseudonym",
+          ],
+          answer:
+            "Present themselves from a position of reliability and competence",
+        },
+        {
+          question: "A check question for 'Be courteous' in Lecture 5 asks:",
+          options: [
+            "Have you made the details razor and needle-sharp?",
+            "Have you used 'I appreciate,' 'please,' and 'thank you' somewhere in your message?",
+            "Have you avoided rehashing the reader's letter?",
+            "Have you said enough, but just enough?",
+          ],
+          answer:
+            "Have you used 'I appreciate,' 'please,' and 'thank you' somewhere in your message?",
+        },
+        {
+          question:
+            "The 'Be concrete' quality in Lecture 5 is exemplified by the revision: 'Before: These brakes stop a car within a short distance.' What is the improved 'After' version?",
+          options: [
+            "These brakes stop a fast-moving car quickly",
+            "These brakes stop a 2-ton car traveling 60 miles an hour, within 240 feet",
+            "These high-performance brakes stop the car in the shortest distance",
+            "These brakes are effective in stopping any vehicle rapidly",
+          ],
+          answer:
+            "These brakes stop a 2-ton car traveling 60 miles an hour, within 240 feet",
+        },
+        {
+          question:
+            "A check question for 'Be concrete' in Lecture 5 asks: 'Have you flashed word pictures, made facts vivid?' This is primarily achieved by:",
+          options: [
+            "Using longer and more complex sentences",
+            "Using crisp, specific, and detailed language",
+            "Using passive voice constructions",
+            "Using abstract vocabulary",
+          ],
+          answer: "Using crisp, specific, and detailed language",
+        },
+        {
+          question:
+            "How many main qualities of good writing beginning with 'C' are described across Lectures 4 and 5?",
+          options: ["Six", "Seven", "Eight", "Nine"],
+          answer: "Nine",
+        },
+        {
+          question:
+            "A short story writer has expressed the feelings of a beggar in a lifelike way. Which quality of a good writer does this best express?",
+          options: ["Precision", "Consideration", "Courtesy", "Conciseness"],
+          answer: "Consideration",
+        },
+        {
+          question:
+            "A reporter double-checks all names, dates, and statistics before publishing an article. Which quality of good writing is the reporter demonstrating?",
+          options: ["Be creative", "Be complete", "Be correct", "Be concrete"],
+          answer: "Be correct",
+        },
+        {
+          question:
+            "A technical writer presents a complex software manual by including only the steps users actually need, removing all background theory. Which quality does this best illustrate?",
+          options: ["Be courteous", "Be concise", "Be credible", "Be concrete"],
+          answer: "Be concise",
+        },
+        {
+          question:
+            "A business letter ends with 'Thank you for your time, and I appreciate your consideration.' This best demonstrates which quality of good writing?",
+          options: ["Conciseness", "Correctness", "Courtesy", "Creativity"],
+          answer: "Courtesy",
+        },
+        {
+          question:
+            "A writer uses specific figures, statistics, and vivid details to describe a scene, leaving no room for vague interpretation. This demonstrates which quality?",
+          options: ["Conciseness", "Clarity", "Concreteness", "Completeness"],
+          answer: "Concreteness",
+        },
+        {
+          question:
+            "In Lecture 5, 'Be complete' asks writers to check: 'Did you PLAN what you said?' This implies that completeness in writing requires:",
+          options: [
+            "Spontaneous, unplanned writing for authenticity",
+            "Prior planning and deliberate inclusion of all essential information",
+            "Writing the conclusion before the introduction",
+            "Using only one main idea per paragraph",
+          ],
+          answer:
+            "Prior planning and deliberate inclusion of all essential information",
+        },
+        {
+          question:
+            "A journalist stresses reliability and expertise in their writing so that readers trust the information provided. This best demonstrates:",
+          options: ["Courtesy", "Creativity", "Credibility", "Conciseness"],
+          answer: "Credibility",
+        },
+      ];
+      quizData.sort(() => Math.random() - 0.5);
+
+      let currentQuestion = 0;
+      let score = 0;
+
+      const userAnswers = [];
+
+      const questionEl = document.getElementById("question");
+      const optionsEl = document.getElementById("options");
+      const nextBtn = document.getElementById("nextBtn");
+      const submitBtn = document.getElementById("submitBtn");
+      const showResultBtn = document.getElementById("showResultBtn");
+      const resultBox = document.getElementById("resultBox");
+      const questionNumber = document.getElementById("questionNumber");
+
+      function loadQuestion() {
+        resetState();
+
+        let currentQuiz = quizData[currentQuestion];
+
+        questionNumber.innerHTML = `Question ${currentQuestion + 1} of ${quizData.length}`;
+
+        questionEl.innerHTML = currentQuiz.question;
+
+        currentQuiz.options.forEach((option) => {
+          const button = document.createElement("button");
+
+          button.innerHTML = option;
+
+          button.classList.add("option");
+
+          button.addEventListener("click", () => selectOption(button, option));
+
+          optionsEl.appendChild(button);
+        });
+      }
+
+      function resetState() {
+        optionsEl.innerHTML = "";
+      }
+
+      function selectOption(button, option) {
+        const buttons = document.querySelectorAll(".option");
+
+        buttons.forEach((btn) => btn.classList.remove("selected"));
+
+        button.classList.add("selected");
+
+        userAnswers[currentQuestion] = option;
+      }
+
+      nextBtn.addEventListener("click", () => {
+        if (userAnswers[currentQuestion] == null) {
+          alert("Please select an answer");
+
+          return;
+        }
+
+        currentQuestion++;
+
+        if (currentQuestion < quizData.length) {
+          loadQuestion();
+        } else {
+          nextBtn.style.display = "none";
+
+          submitBtn.style.display = "inline-block";
+
+          questionNumber.innerHTML = "";
+
+          questionEl.innerHTML = "Quiz Completed. Click Submit Quiz";
+
+          optionsEl.innerHTML = "";
+        }
+      });
+
+      submitBtn.addEventListener("click", () => {
+        score = 0;
+
+        quizData.forEach((q, index) => {
+          if (userAnswers[index] === q.answer) {
+            score++;
+          }
+        });
+
+        let percentage = ((score / quizData.length) * 100).toFixed(2);
+
+        resultBox.innerHTML = `
+          Your Score: ${score} / ${quizData.length}
+          <br><br>
+          Percentage: ${percentage}%
+          `;
+
+        submitBtn.style.display = "none";
+
+        showResultBtn.style.display = "inline-block";
+      });
+
+      showResultBtn.addEventListener("click", () => {
+        let resultHTML = "";
+
+        quizData.forEach((q, index) => {
+          let userAns = userAnswers[index];
+
+          let isCorrect = userAns === q.answer;
+
+          resultHTML += `
+
+          <div style="
+          background:#334155;
+          padding:20px;
+          border-radius:12px;
+          margin-top:20px;
+          text-align:left;
+          ">
+
+          <h3>Q${index + 1}: ${q.question}</h3>
+
+          <p style="margin-top:10px;">
+          Your Answer:
+          <span style="color:${isCorrect ? "#22c55e" : "#ef4444"}">
+          ${userAns}
+          </span>
+          </p>
+
+          <p style="margin-top:8px;">
+          Correct Answer:
+          <span style="color:#22c55e">
+          ${q.answer}
+          </span>
+          </p>
+
+          </div>
+
+          `;
+        });
+
+        document.getElementById("quizArea").innerHTML = resultHTML;
+      });
+
+      loadQuestion();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eng001 by Muhammad Moeez</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        background: #0f172a;
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .quiz-box {
+        width: 100%;
+        max-width: 900px;
+        background: #1e293b;
+        padding: 30px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #38bdf8;
+      }
+
+      #questionNumber {
+        margin-bottom: 10px;
+        color: #94a3b8;
+      }
+
+      #question {
+        font-size: 24px;
+        line-height: 1.5;
+        margin-bottom: 25px;
+      }
+
+      .option {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 10px;
+        background: #334155;
+        color: white;
+        font-size: 16px;
+        text-align: left;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .option:hover {
+        background: #475569;
+      }
+
+      .selected {
+        background: #0ea5e9 !important;
+      }
+
+      .correct {
+        background: #16a34a !important;
+      }
+
+      .wrong {
+        background: #dc2626 !important;
+      }
+
+      #nextBtn,
+      #submitBtn,
+      #showResultBtn {
+        margin-top: 20px;
+        padding: 14px 25px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+      }
+
+      #nextBtn {
+        background: #0ea5e9;
+      }
+
+      #submitBtn {
+        background: #22c55e;
+        display: none;
+      }
+
+      #showResultBtn {
+        background: #f59e0b;
+        display: none;
+      }
+
+      #resultBox {
+        margin-top: 25px;
+        text-align: center;
+        font-size: 28px;
+      }
+      .header {
+        width: 100%;
+        background: #1e293b;
+        padding: 18px 30px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+      }
+
+      .nav-list {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .nav-list li a {
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        transition: 0.3s;
+      }
+
+      .nav-list li a:hover {
+        color: #38bdf8;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .header {
+          padding: 15px 20px;
+        }
+
+        .nav-list li a {
+          font-size: 18px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header {
+          padding: 12px 15px;
+        }
+
+        .nav-list li a {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="quiz-box">
+      <header class="header">
+        <nav>
+          <ul class="nav-list">
+            <li>
+              <a href="../index.html">"Handouts Quiz"</a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <h1>Eng001 Midterm Quiz</h1>
+
+      <div id="quizArea">
+        <div id="questionNumber"></div>
+
+        <div id="question"></div>
+
+        <div id="options"></div>
+
+        <button id="nextBtn">Next Question</button>
+
+        <button id="submitBtn">Submit Quiz</button>
+
+        <button id="showResultBtn">Show Result</button>
+
+        <div id="resultBox"></div>
+      </div>
+    </div>
+
+    <script>
+      const quizData = [
+        {
+          question:
+            "The indirect narration of 'Hurrah! We have won the match' is:",
+          options: [
+            "They exclaimed with joy that they had won the match.",
+            "They exclaim with joy that they had win the match.",
+            "They cry with joy that they did won the match.",
+            "They cried with joy that they will won the match.",
+          ],
+          answer: "They exclaimed with joy that they had won the match.",
+        },
+
+        {
+          question: "Which verb can be both singular and plural?",
+          options: ["Is", "Am", "Has", "Do"],
+          answer: "Do",
+        },
+
+        {
+          question: "I didn't know what he meant. (?)",
+          options: [
+            "what he mean",
+            "what did he mean",
+            "what did he meant",
+            "what he meant",
+          ],
+          answer: "what he meant",
+        },
+
+        {
+          question: "My friend Ken will come with me to Metro town.",
+          options: [
+            "Declarative sentence",
+            "Interrogative sentence",
+            "Imperative sentence",
+            "Exclamatory sentence",
+          ],
+          answer: "Declarative sentence",
+        },
+
+        {
+          question: "Listen carefully.",
+          options: [
+            "Exclamatory sentence",
+            "Interrogative sentence",
+            "Imperative sentence",
+            "Declarative sentence",
+          ],
+          answer: "Imperative sentence",
+        },
+
+        {
+          question:
+            "The persons who use their voices and bodies to communicate their message are:",
+          options: ["Speakers", "Writers", "Readers", "Listeners"],
+          answer: "Speakers",
+        },
+
+        {
+          question: "Using various symbols to represent sounds is called:",
+          options: [
+            "Pronunciation",
+            "Syllabication",
+            "Etymology",
+            "Derivation",
+          ],
+          answer: "Pronunciation",
+        },
+
+        {
+          question: "Choose the option that best defines 'Clarity':",
+          options: [
+            "To be tightly structured",
+            "To express a clear point",
+            "To be syntactically correct",
+            "To be substantive",
+          ],
+          answer: "To express a clear point",
+        },
+
+        {
+          question: "Choose the option that best defines the 'Conciseness':",
+          options: ["Wordiness", "Creativity", "Verbosity", "Brevity"],
+          answer: "Brevity",
+        },
+
+        {
+          question:
+            "Popular expressions which may not be considered proper in formal use are called:",
+          options: ["Formal speech", "Slang", "Timeline", "Antonyms"],
+          answer: "Slang",
+        },
+
+        {
+          question:
+            "How many adverbs are there in the sentence: 'I really woke up too early this morning.'",
+          options: ["0", "1", "2", "3"],
+          answer: "3",
+        },
+
+        {
+          question: "What a rainy day!",
+          options: [
+            "Exclamatory sentence",
+            "Imperative sentence",
+            "Interrogative sentence",
+            "Declarative sentence",
+          ],
+          answer: "Exclamatory sentence",
+        },
+
+        {
+          question:
+            "A noun which names anything perceived through physical senses is:",
+          options: [
+            "Collective noun",
+            "Concrete noun",
+            "Countable noun",
+            "Non-countable noun",
+          ],
+          answer: "Concrete noun",
+        },
+
+        {
+          question: "Which one modifies a noun or pronoun by describing it?",
+          options: ["Conjunction", "Adverb", "Adjective", "Verb"],
+          answer: "Adjective",
+        },
+
+        {
+          question: "‘they told each other’ is incomplete because:",
+          options: [
+            "Add a subject",
+            "Add a verb",
+            "Add a subject and a verb",
+            "It doesn't express a complete thought",
+          ],
+          answer: "It doesn't express a complete thought",
+        },
+
+        {
+          question:
+            "The direct narration of 'He told me that he would accept my offer' is:",
+          options: [
+            "He said, “I have accept your offer.”",
+            "He said, “I will accept my offer.”",
+            "He said, “I will accept your offer.”",
+            "He said, “I will accept his offer.”",
+          ],
+          answer: "He said, “I will accept your offer.”",
+        },
+
+        {
+          question:
+            "Choose the best choice to complete the sentence: He said …..",
+          options: [
+            "the weather it is colder than usual",
+            "the weather was colder than usual",
+            "the weather be colder than usual",
+            "that the weather colder than usual",
+          ],
+          answer: "the weather was colder than usual",
+        },
+
+        {
+          question: "SMOG Index stands for:",
+          options: [
+            "Simple Measure of Gobbledygook",
+            "Short Measure of Gobbledygook",
+            "Simple Management of Gobbledygook",
+            "Simplest measure of Gobbledygook",
+          ],
+          answer: "Simple Measure of Gobbledygook",
+        },
+
+        {
+          question: "A list of technical words used in a field of study is:",
+          options: ["Etymology", "Glossary", "Syllabication", "Derivation"],
+          answer: "Glossary",
+        },
+        {
+          question:
+            "What is the form of the 3rd person singular feminine subject pronoun?",
+          options: ["Her", "His", "Them", "You"],
+          answer: "Her",
+        },
+
+        {
+          question: "Webster's Collegiate Dictionary is:",
+          options: [
+            "an Abridged dictionary",
+            "an Unabridged dictionary",
+            "a Glossary",
+            "a Thesaurus",
+          ],
+          answer: "an Abridged dictionary",
+        },
+
+        {
+          question:
+            "A noun naming a group of things, animals, or persons is called:",
+          options: [
+            "Collective noun",
+            "Concrete noun",
+            "Abstract noun",
+            "Proper noun",
+          ],
+          answer: "Collective noun",
+        },
+
+        {
+          question:
+            "Which one of the following options is not a 'Readability Test'?",
+          options: [
+            "SMOG index",
+            "Fog Index",
+            "Flesch Reading Ease",
+            "Gunning Fog",
+          ],
+          answer: "SMOG index",
+        },
+
+        {
+          question:
+            "Which one of the following options does contain an adverb?",
+          options: [
+            "Friendly people",
+            "Quickly ran",
+            "Beautiful garden",
+            "Tall building",
+          ],
+          answer: "Quickly ran",
+        },
+
+        {
+          question: "Choose the option that best defines 'Courteous':",
+          options: ["Detestable", "Odious", "Offensive", "Considerate"],
+          answer: "Considerate",
+        },
+
+        {
+          question:
+            "A short story writer has expressed the feelings of the beggar in a lifelike way. Which quality does it express?",
+          options: ["Precision", "Consideration", "Courtesy", "Conciseness"],
+          answer: "Consideration",
+        },
+
+        {
+          question:
+            "Indirect narration of 'Sang said, \"I have already written a letter to my family in Thailand.\"' is:",
+          options: [
+            "Sang said that he wrote a letter to his family in Thailand.",
+            "Sang said that he was writing a letter to his family in Thailand.",
+            "Sang said that he had already written a letter to his family in Thailand.",
+            "Sang said that he will write a letter to his family in Thailand.",
+          ],
+          answer:
+            "Sang said that he had already written a letter to his family in Thailand.",
+        },
+
+        {
+          question:
+            "Which type of writing engages readers through original insight and precise language?",
+          options: ["Interesting", "Monotonous", "Dreary", "Tedious"],
+          answer: "Interesting",
+        },
+
+        {
+          question:
+            "Which type of pronoun changes its form to indicate person, number, gender, and case?",
+          options: [
+            "Demonstrative pronoun",
+            "Personal pronoun",
+            "Relative pronoun",
+            "Interrogative pronoun",
+          ],
+          answer: "Personal pronoun",
+        },
+
+        {
+          question:
+            "Choose the correct tense signal word: 'For seven days' is used for:",
+          options: [
+            "Present Perfect Progressive",
+            "Present Simple",
+            "Past Simple",
+            "Future Perfect",
+          ],
+          answer: "Present Simple",
+        },
+
+        {
+          question: "'Since 6 o'clock' is a signal word for:",
+          options: [
+            "Present Perfect Progressive",
+            "Present Simple",
+            "Past Continuous",
+            "Future Continuous",
+          ],
+          answer: "Present Perfect Progressive",
+        },
+
+        {
+          question: "'Often' is a signal word for:",
+          options: [
+            "Present Perfect Progressive",
+            "Present Simple",
+            "Past Perfect",
+            "Future Simple",
+          ],
+          answer: "Present Simple",
+        },
+
+        {
+          question: "Which word means 'before cooking'?",
+          options: ["cooking", "precooking", "recook", "uncook"],
+          answer: "precooking",
+        },
+
+        {
+          question: "Camels store water ___________ of fat in their humps.",
+          options: ["form", "by the form", "in the form", "with the form"],
+          answer: "in the form",
+        },
+        {
+          question:
+            "A leading journalist leaked out the famous wheat scandal and names of culprits. Which trait does it highlight?",
+          options: ["Accuracy", "Credibility", "Concreteness", "Congeniality"],
+          answer: "Credibility",
+        },
+
+        {
+          question: "The best sentence gives one idea and ____.",
+          options: ["Fact", "Theme", "Unity", "Paragraph"],
+          answer: "Unity",
+        },
+
+        {
+          question:
+            "SMOG is a form created by the combination of smoke and fog called:",
+          options: ["Compound", "Suffix", "Blend", "Portmanteau"],
+          answer: "Portmanteau",
+        },
+
+        {
+          question: "If a person is unknown, what word is used for him/her?",
+          options: ["Anonymous", "Known", "Visible", "Famous"],
+          answer: "Anonymous",
+        },
+      ];
+      // RANDOM QUESTIONS
+      quizData.sort(() => Math.random() - 0.5);
+
+      let currentQuestion = 0;
+      let score = 0;
+
+      const userAnswers = [];
+
+      const questionEl = document.getElementById("question");
+      const optionsEl = document.getElementById("options");
+      const nextBtn = document.getElementById("nextBtn");
+      const submitBtn = document.getElementById("submitBtn");
+      const showResultBtn = document.getElementById("showResultBtn");
+      const resultBox = document.getElementById("resultBox");
+      const questionNumber = document.getElementById("questionNumber");
+
+      function loadQuestion() {
+        resetState();
+
+        let currentQuiz = quizData[currentQuestion];
+
+        questionNumber.innerHTML = `Question ${currentQuestion + 1} of ${quizData.length}`;
+
+        questionEl.innerHTML = currentQuiz.question;
+
+        currentQuiz.options.forEach((option) => {
+          const button = document.createElement("button");
+
+          button.innerHTML = option;
+
+          button.classList.add("option");
+
+          button.addEventListener("click", () => selectOption(button, option));
+
+          optionsEl.appendChild(button);
+        });
+      }
+
+      function resetState() {
+        optionsEl.innerHTML = "";
+      }
+
+      function selectOption(button, option) {
+        const buttons = document.querySelectorAll(".option");
+
+        buttons.forEach((btn) => btn.classList.remove("selected"));
+
+        button.classList.add("selected");
+
+        userAnswers[currentQuestion] = option;
+      }
+
+      nextBtn.addEventListener("click", () => {
+        if (userAnswers[currentQuestion] == null) {
+          alert("Please select an answer");
+
+          return;
+        }
+
+        currentQuestion++;
+
+        if (currentQuestion < quizData.length) {
+          loadQuestion();
+        } else {
+          nextBtn.style.display = "none";
+
+          submitBtn.style.display = "inline-block";
+
+          questionNumber.innerHTML = "";
+
+          questionEl.innerHTML = "Quiz Completed. Click Submit Quiz";
+
+          optionsEl.innerHTML = "";
+        }
+      });
+
+      submitBtn.addEventListener("click", () => {
+        score = 0;
+
+        quizData.forEach((q, index) => {
+          if (userAnswers[index] === q.answer) {
+            score++;
+          }
+        });
+
+        let percentage = ((score / quizData.length) * 100).toFixed(2);
+
+        resultBox.innerHTML = `
+          Your Score: ${score} / ${quizData.length}
+          <br><br>
+          Percentage: ${percentage}%
+          `;
+
+        submitBtn.style.display = "none";
+
+        showResultBtn.style.display = "inline-block";
+      });
+
+      showResultBtn.addEventListener("click", () => {
+        let resultHTML = "";
+
+        quizData.forEach((q, index) => {
+          let userAns = userAnswers[index];
+
+          let isCorrect = userAns === q.answer;
+
+          resultHTML += `
+
+          <div style="
+          background:#334155;
+          padding:20px;
+          border-radius:12px;
+          margin-top:20px;
+          text-align:left;
+          ">
+
+          <h3>Q${index + 1}: ${q.question}</h3>
+
+          <p style="margin-top:10px;">
+          Your Answer:
+          <span style="color:${isCorrect ? "#22c55e" : "#ef4444"}">
+          ${userAns}
+          </span>
+          </p>
+
+          <p style="margin-top:8px;">
+          Correct Answer:
+          <span style="color:#22c55e">
+          ${q.answer}
+          </span>
+          </p>
+
+          </div>
+
+          `;
+        });
+
+        document.getElementById("quizArea").innerHTML = resultHTML;
+      });
+
+      loadQuestion();
+    </script>
+  </body>
+</html>
