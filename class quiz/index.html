@@ -1,0 +1,1548 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eng001 by Muhammad Moeez</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        background: #0f172a;
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .quiz-box {
+        width: 100%;
+        max-width: 900px;
+        background: #1e293b;
+        padding: 30px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #38bdf8;
+      }
+
+      #questionNumber {
+        margin-bottom: 10px;
+        color: #94a3b8;
+      }
+
+      #question {
+        font-size: 24px;
+        line-height: 1.5;
+        margin-bottom: 25px;
+      }
+
+      .option {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 10px;
+        background: #334155;
+        color: white;
+        font-size: 16px;
+        text-align: left;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .option:hover {
+        background: #475569;
+      }
+
+      .selected {
+        background: #0ea5e9 !important;
+      }
+
+      .correct {
+        background: #16a34a !important;
+      }
+
+      .wrong {
+        background: #dc2626 !important;
+      }
+
+      #nextBtn,
+      #submitBtn,
+      #showResultBtn {
+        margin-top: 20px;
+        padding: 14px 25px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+      }
+
+      #nextBtn {
+        background: #0ea5e9;
+      }
+
+      #submitBtn {
+        background: #22c55e;
+        display: none;
+      }
+
+      #showResultBtn {
+        background: #f59e0b;
+        display: none;
+      }
+
+      #resultBox {
+        margin-top: 25px;
+        text-align: center;
+        font-size: 28px;
+      }
+      .header {
+        width: 100%;
+        background: #1e293b;
+        padding: 18px 30px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+      }
+
+      .nav-list {
+        list-style: none;
+        display: grid;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .nav-list li a {
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        transition: 0.3s;
+      }
+
+      .nav-list li a:hover {
+        color: #38bdf8;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .header {
+          padding: 15px 20px;
+        }
+
+        .nav-list li a {
+          font-size: 18px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header {
+          padding: 12px 15px;
+        }
+
+        .nav-list li a {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="quiz-box">
+      <header class="header">
+        <nav>
+          <ul class="nav-list">
+            <li>
+              <a href="../Past Quiz/index.html">"Past Quiz"</a>
+            </li>
+            <li>
+              <a href="../index.html">"Handouts Quiz"</a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <h1>Eng001 Lesson 6-15 Quiz</h1>
+
+      <div id="quizArea">
+        <div id="questionNumber"></div>
+
+        <div id="question"></div>
+
+        <div id="options"></div>
+
+        <button id="nextBtn">Next Question</button>
+
+        <button id="submitBtn">Submit Quiz</button>
+
+        <button id="showResultBtn">Show Result</button>
+
+        <div id="resultBox"></div>
+      </div>
+    </div>
+
+    <script>
+      const quizData = [
+        // ════════════════════════════════════════════
+        // LECTURE 6 – THE PROCESS OF WRITING
+        // ════════════════════════════════════════════
+        {
+          question:
+            "According to Lecture 6, what is the correct sequence of the writing process?",
+          options: [
+            "Collection, Invention, Drafting, Organization, Revising, Proofreading",
+            "Invention, Collection, Organization, Drafting, Revising, Proofreading",
+            "Drafting, Invention, Collection, Organization, Proofreading, Revising",
+            "Organization, Collection, Invention, Drafting, Proofreading, Revising",
+          ],
+          answer:
+            "Invention, Collection, Organization, Drafting, Revising, Proofreading",
+        },
+        {
+          question:
+            "The first stage of the writing process described in Lecture 6 is 'Invention.' This stage involves:",
+          options: [
+            "Proofreading and editing the final draft",
+            "Exploring the problem, making goals operational, and generating ideas",
+            "Collecting information from libraries and the internet",
+            "Organizing information using outlines",
+          ],
+          answer:
+            "Exploring the problem, making goals operational, and generating ideas",
+        },
+        {
+          question:
+            "Thomas Williams' quote — 'A writer keeps surprising himself... he doesn't know what he is saying until he sees it on the page' — is used in Lecture 6 to introduce which stage of writing?",
+          options: ["Proofreading", "Collection", "Invention", "Organization"],
+          answer: "Invention",
+        },
+        {
+          question:
+            "The journalistic questions used during the Invention stage of writing are:",
+          options: [
+            "What, Which, Who, Whose, Whichever, Whoever",
+            "Who, What, Where, When, Why, How, So What",
+            "Who, What, Whether, When, Why, How",
+            "What, When, Whether, Why, Whom, Which",
+          ],
+          answer: "Who, What, Where, When, Why, How, So What",
+        },
+        {
+          question:
+            "According to Lecture 6, which internal source can a writer use during the Collection stage?",
+          options: [
+            "Libraries and encyclopaedias",
+            "Internet search engines",
+            "Free writing, brainstorming, and probing yourself",
+            "Resource persons and interviews",
+          ],
+          answer: "Free writing, brainstorming, and probing yourself",
+        },
+        {
+          question:
+            "In Lecture 6, the 'Probing Yourself' technique uses the question 'How is X made or done?' This represents which type of analysis?",
+          options: [
+            "Functional Analysis",
+            "Causal Analysis",
+            "Process Analysis",
+            "Simple Analysis",
+          ],
+          answer: "Process Analysis",
+        },
+        {
+          question:
+            "The 'Probing Yourself' question 'What are the causes of X?' in Lecture 6 is an example of:",
+          options: [
+            "Classification",
+            "Causal Analysis",
+            "Comparison",
+            "Process Analysis",
+          ],
+          answer: "Causal Analysis",
+        },
+        {
+          question:
+            "In Lecture 6, the technique where ideas are visually grouped around a central topic (e.g., 'Holidays' in the center, with branches) is called:",
+          options: ["Listing", "Probing", "Clustering", "Brainstorming"],
+          answer: "Clustering",
+        },
+        {
+          question:
+            "According to Lecture 6, which of the following is a recommended strategy when you start to write?",
+          options: [
+            "Write the conclusion first so you have a target",
+            "Avoid outlining as it restricts creativity",
+            "Nutshell your whole idea in three or four sentences",
+            "Write quickly without stopping to review",
+          ],
+          answer: "Nutshell your whole idea in three or four sentences",
+        },
+        {
+          question:
+            "The textbook formula for writing given in Lecture 6 includes all of the following steps EXCEPT:",
+          options: [
+            "State your thesis",
+            "Write an outline",
+            "Conduct an interview",
+            "Revise and polish",
+          ],
+          answer: "Conduct an interview",
+        },
+
+        // ════════════════════════════════════════════
+        // LECTURE 7 – THE PROCESS OF WRITING II
+        // ════════════════════════════════════════════
+        {
+          question:
+            "According to Lecture 7, which of the following is an EXTERNAL source of information for writers?",
+          options: [
+            "Free writing",
+            "Brainstorming",
+            "Probing yourself",
+            "Libraries",
+          ],
+          answer: "Libraries",
+        },
+        {
+          question:
+            "In the Library of Congress Classification system, which letter represents 'Language and Literature'?",
+          options: ["L", "N", "P", "Q"],
+          answer: "P",
+        },
+        {
+          question:
+            "In the Dewey Decimal System, the classification number 300 represents:",
+          options: [
+            "Pure Science",
+            "Philosophy & Psychology",
+            "Social Sciences",
+            "Religion",
+          ],
+          answer: "Social Sciences",
+        },
+        {
+          question:
+            "According to Lecture 7, in the Dewey Decimal System, 'Applied Science' falls under which number range?",
+          options: ["500", "600", "700", "800"],
+          answer: "600",
+        },
+        {
+          question:
+            "During the 'Organizing' stage described in Lecture 7, which part of the paper is used to 'grab readers' attention and introduce the main idea'?",
+          options: [
+            "The body",
+            "The conclusion",
+            "The introduction",
+            "The bibliography",
+          ],
+          answer: "The introduction",
+        },
+        {
+          question:
+            "According to Lecture 7, the 'Conclusion' in organizing a paper serves to:",
+          options: [
+            "Introduce new arguments",
+            "Wrap up the argument and re-emphasize the writer's main ideas",
+            "List the sources used",
+            "Present supporting paragraphs",
+          ],
+          answer:
+            "Wrap up the argument and re-emphasize the writer's main ideas",
+        },
+        {
+          question:
+            "During the Drafting stage described in Lecture 7, which of the following is NOT a recommended tip?",
+          options: [
+            "Give yourself ample time",
+            "Find a comfortable place to write",
+            "Write as fast as possible to meet deadlines",
+            "Take breaks",
+          ],
+          answer: "Write as fast as possible to meet deadlines",
+        },
+        {
+          question:
+            "According to Lecture 7, during Proofreading, a writer should check three sensitive areas. Which of the following is one of them?",
+          options: [
+            "Tone, style, and voice",
+            "Content, format, and mechanics",
+            "Syntax, diction, and purpose",
+            "Introduction, body, and conclusion",
+          ],
+          answer: "Content, format, and mechanics",
+        },
+        {
+          question:
+            "Under 'Mechanics' in the Proofreading checklist of Lecture 7, which of the following is a required check?",
+          options: [
+            "Whether quotations are used correctly",
+            "Whether headings and subheadings are used",
+            "Whether subject-verb agreement is correct",
+            "Whether a bibliography is included",
+          ],
+          answer: "Whether subject-verb agreement is correct",
+        },
+        {
+          question:
+            "Under 'Revising' described in Lecture 7, reviewing 'higher-order concerns' includes checking for all of the following EXCEPT:",
+          options: [
+            "Clear communication of ideas",
+            "Organization of paper",
+            "Spelling of individual words",
+            "Strong introduction and conclusion",
+          ],
+          answer: "Spelling of individual words",
+        },
+
+        // ════════════════════════════════════════════
+        // LECTURE 8 – ALL ABOUT WORDS
+        // ════════════════════════════════════════════
+        {
+          question: "The study of the structure of words is called:",
+          options: ["Syntax", "Morphology", "Phonology", "Etymology"],
+          answer: "Morphology",
+        },
+        {
+          question: "A morpheme is defined as:",
+          options: [
+            "A complete word with a full meaning",
+            "The smallest linguistic unit that has semantic meaning",
+            "A group of words that forms a clause",
+            "A unit of sound with no meaning",
+          ],
+          answer: "The smallest linguistic unit that has semantic meaning",
+        },
+        {
+          question: "Which of the following is an example of a FREE morpheme?",
+          options: ["-ness", "-ish", "dog", "-ism"],
+          answer: "dog",
+        },
+        {
+          question: "Which of the following is an example of a BOUND morpheme?",
+          options: ["child", "elephant", "dog", "-ness"],
+          answer: "-ness",
+        },
+        {
+          question:
+            "How many morphemes does the word 'anti-dis-establish-ment-arian-ism' contain?",
+          options: ["Three", "Four", "Five", "Six"],
+          answer: "Six",
+        },
+        {
+          question: "A 'Portmanteau' word is best described as:",
+          options: [
+            "A word formed by adding a prefix to a root",
+            "A word derived by combining portions of two or more separate words",
+            "A word that cannot stand alone",
+            "A word used only in formal writing",
+          ],
+          answer:
+            "A word derived by combining portions of two or more separate words",
+        },
+        {
+          question:
+            "Which of the following is a correct example of a Portmanteau word?",
+          options: [
+            "Unhappy (un + happy)",
+            "Brunch (breakfast + lunch)",
+            "Bejewelled (be + jewelled)",
+            "Advance (ad + vance)",
+          ],
+          answer: "Brunch (breakfast + lunch)",
+        },
+        {
+          question: "The prefix 'anti-' means:",
+          options: ["Before", "With", "Opposing or against", "Below"],
+          answer: "Opposing or against",
+        },
+        {
+          question: "The prefix 'hyper-' means:",
+          options: ["Under", "Half", "Beyond or more than normal", "Around"],
+          answer: "Beyond or more than normal",
+        },
+        {
+          question: "The prefix 'intra-' means:",
+          options: ["Between", "Inside or within", "Across", "Against"],
+          answer: "Inside or within",
+        },
+        {
+          question: "The noun suffix '-ment' at the end of a word indicates:",
+          options: [
+            "One who does something",
+            "State of, act of, or result of",
+            "The quality of being something",
+            "Full of or having",
+          ],
+          answer: "State of, act of, or result of",
+        },
+        {
+          question: "The adjective suffix '-ous' means:",
+          options: ["Without", "Made of", "Full of or having", "Able to"],
+          answer: "Full of or having",
+        },
+        {
+          question: "The verb suffix '-ize' means:",
+          options: ["To make", "To have", "Without", "Relating to"],
+          answer: "To make",
+        },
+        {
+          question:
+            "The adverb suffix '-ly' most commonly makes which part of speech?",
+          options: ["Noun", "Adjective", "Verb", "Adverb"],
+          answer: "Adverb",
+        },
+        {
+          question:
+            "In figurative language, the sentence 'Suddenly a clever idea struck me' is an example of:",
+          options: [
+            "Literal language",
+            "Figurative language",
+            "Collocation",
+            "Circumlocution",
+          ],
+          answer: "Figurative language",
+        },
+        {
+          question: "Collocation is best described as:",
+          options: [
+            "The study of word origins",
+            "The relationship between two words or groups of words that often go together and form a common expression",
+            "The use of many words where a few would do",
+            "The literal meaning of a word",
+          ],
+          answer:
+            "The relationship between two words or groups of words that often go together and form a common expression",
+        },
+        {
+          question:
+            "Which of the following is an example of an Adjective + Noun collocation?",
+          options: [
+            "Throw a party",
+            "Strongly suggest",
+            "Square meal",
+            "Pay packet",
+          ],
+          answer: "Square meal",
+        },
+        {
+          question: "The 'Denotation' of a word refers to:",
+          options: [
+            "The emotional association the word evokes",
+            "The literal meaning of the word",
+            "The figurative use of the word",
+            "A synonym of the word",
+          ],
+          answer: "The literal meaning of the word",
+        },
+        {
+          question:
+            "The word 'vagrant' carries a ____________ connotation, while 'homeless' carries a ____________ connotation.",
+          options: [
+            "Positive; negative",
+            "Neutral; negative",
+            "Negative; positive",
+            "Neutral; positive",
+          ],
+          answer: "Negative; positive",
+        },
+        {
+          question:
+            "According to the denotation/connotation table in Lecture 8, which word is the 'unfavorable' connotation of 'prudent'?",
+          options: ["Timid", "Cowardly", "Mousy", "Reserved"],
+          answer: "Cowardly",
+        },
+
+        // ════════════════════════════════════════════
+        // LECTURE 9 – DICTIONARY: A WRITER'S LANGUAGE TOOL
+        // ════════════════════════════════════════════
+        {
+          question: "An 'unabridged dictionary' is best described as one that:",
+          options: [
+            "Has been shortened to include only the most common words",
+            "Comprehensively covers all words known at the time of printing",
+            "Focuses exclusively on slang expressions",
+            "Gives only the etymology or derivation of words",
+          ],
+          answer:
+            "Comprehensively covers all words known at the time of printing",
+        },
+        {
+          question:
+            "Which type of dictionary gives the etymology or derivation of words and is useful for reading historical materials?",
+          options: [
+            "Abridged dictionary",
+            "Thesaurus",
+            "Historical dictionary",
+            "Encyclopedic dictionary",
+          ],
+          answer: "Historical dictionary",
+        },
+        {
+          question: "A 'thesaurus' is a dictionary that gives:",
+          options: [
+            "Antonyms only",
+            "Synonyms",
+            "Etymologies",
+            "Pronunciation guides",
+          ],
+          answer: "Synonyms",
+        },
+        {
+          question:
+            "The Oxford English Dictionary is classified as which type of dictionary?",
+          options: [
+            "Abridged",
+            "Thesaurus",
+            "Slang dictionary",
+            "Historical dictionary",
+          ],
+          answer: "Historical dictionary",
+        },
+        {
+          question: "In Lecture 9, 'guide words' in a dictionary are used to:",
+          options: [
+            "Explain abbreviations and special features",
+            "Help the user find the correct page alphabetically",
+            "Show how a word is divided at the end of a line",
+            "Trace the root words used to form the word",
+          ],
+          answer: "Help the user find the correct page alphabetically",
+        },
+        {
+          question: "The term 'syllabication' in a dictionary refers to:",
+          options: [
+            "The number of syllables in a word",
+            "How the word is divided when separated at the end of a line of print",
+            "The historical origin of a word",
+            "The emotional connotation of a word",
+          ],
+          answer:
+            "How the word is divided when separated at the end of a line of print",
+        },
+        {
+          question:
+            "Which of the following best defines 'Etymology' as used in Lecture 9?",
+          options: [
+            "The study of word structure",
+            "The study of a word's history including derivation and changes in usage over time",
+            "The study of how words are pronounced",
+            "A list of words with their opposites",
+          ],
+          answer:
+            "The study of a word's history including derivation and changes in usage over time",
+        },
+        {
+          question:
+            "A 'glossary' as mentioned in Lecture 9 is best described as:",
+          options: [
+            "An appendix with geographical information",
+            "A list of technical words or expressions used in a field of study or book",
+            "A separate dictionary for slang",
+            "A table of illustrations and maps",
+          ],
+          answer:
+            "A list of technical words or expressions used in a field of study or book",
+        },
+        {
+          question:
+            "Who produced the earliest English language dictionary in 1755?",
+          options: [
+            "Noah Webster",
+            "William Caxton",
+            "Samuel Johnson",
+            "Sir James Murray",
+          ],
+          answer: "Samuel Johnson",
+        },
+        {
+          question:
+            "Noah Webster's dictionary, printed in 1828, is significant because it:",
+          options: [
+            "Was the first bilingual French-English dictionary",
+            "Set the standard for spelling and pronunciation and distinguished American usage from British usage",
+            "Introduced the Dewey Decimal classification",
+            "Traced the origin of words using the Rosetta Stone",
+          ],
+          answer:
+            "Set the standard for spelling and pronunciation and distinguished American usage from British usage",
+        },
+        {
+          question:
+            "The Rosetta Stone, discovered in 1799, was significant to language because:",
+          options: [
+            "It contained the first known English dictionary",
+            "It was written in Greek and two forms of Egyptian, helping unlock ancient languages",
+            "It was used by Noah Webster to standardize spelling",
+            "It contained the earliest Latin-English translation",
+          ],
+          answer:
+            "It was written in Greek and two forms of Egyptian, helping unlock ancient languages",
+        },
+        {
+          question:
+            "A dictionary that contains geographical and biographical information is called an:",
+          options: [
+            "Abridged dictionary",
+            "Encyclopedic dictionary",
+            "Historical dictionary",
+            "Unabridged dictionary",
+          ],
+          answer: "Encyclopedic dictionary",
+        },
+
+        // ════════════════════════════════════════════
+        // LECTURE 10 – PARTS OF SPEECH
+        // ════════════════════════════════════════════
+        {
+          question:
+            "According to Lecture 10, parts of speech are divided into two distinct divisions. Which of the following correctly lists these divisions?",
+          options: [
+            "Nouns and verbs; adjectives and adverbs",
+            "Picture words and function words",
+            "Content words and structural words",
+            "Simple words and compound words",
+          ],
+          answer: "Picture words and function words",
+        },
+        {
+          question:
+            "Which of the following is classified as a 'function word' in Lecture 10?",
+          options: ["Noun", "Verb", "Adjective", "Conjunction"],
+          answer: "Conjunction",
+        },
+        {
+          question:
+            "A noun that names anything which you can perceive through your physical senses is called a:",
+          options: [
+            "Abstract noun",
+            "Collective noun",
+            "Concrete noun",
+            "Proper noun",
+          ],
+          answer: "Concrete noun",
+        },
+        {
+          question:
+            "An abstract noun is the opposite of a concrete noun. Which of the following is an example of an abstract noun?",
+          options: ["book", "table", "justice", "river"],
+          answer: "justice",
+        },
+        {
+          question:
+            "A collective noun names a group. Which of the following sentences contains a collective noun?",
+          options: [
+            "Miriam found six silver dollars in a sock.",
+            "The flock of geese spends most of its time in the pasture.",
+            "Joseph Priestly discovered oxygen.",
+            "The oak tree lost three branches.",
+          ],
+          answer: "The flock of geese spends most of its time in the pasture.",
+        },
+        {
+          question: "A non-countable noun (mass noun) is a noun that:",
+          options: [
+            "Has both a singular and a plural form",
+            "Names a group of persons or things",
+            "Does not have a plural form and refers to something not usually counted",
+            "Always refers to a specific named person or place",
+          ],
+          answer:
+            "Does not have a plural form and refers to something not usually counted",
+        },
+        {
+          question:
+            "A verb that asserts something about the subject and expresses actions, events, or states of being is:",
+          options: [
+            "The most important part of the sentence",
+            "A modifier of the noun",
+            "A function word only",
+            "An optional sentence element",
+          ],
+          answer: "The most important part of the sentence",
+        },
+        {
+          question:
+            "An adjective usually precedes the noun or pronoun it modifies. Which of the following sentences has the adjective in the correct position?",
+          options: [
+            "The balloon floated truck-shaped.",
+            "The truck-shaped balloon floated over the treetops.",
+            "The balloon, truck-shaped, over the treetops floated.",
+            "Floated truck-shaped the balloon.",
+          ],
+          answer: "The truck-shaped balloon floated over the treetops.",
+        },
+        {
+          question:
+            "Which of the following sentences uses a DEMONSTRATIVE adjective?",
+          options: [
+            "What is your phone number?",
+            "This apartment needs to be fumigated.",
+            "Many people believe corporations are under-taxed.",
+            "The bakery sold his favorite bread.",
+          ],
+          answer: "This apartment needs to be fumigated.",
+        },
+        {
+          question: "An adverb can modify all of the following EXCEPT:",
+          options: ["A verb", "Another adverb", "An adjective", "A noun"],
+          answer: "A noun",
+        },
+        {
+          question:
+            "An adverb answers questions such as 'how', 'when', 'where', and 'how much.' Which of these does an adverb NOT typically indicate?",
+          options: ["Manner", "Time", "Place", "Gender"],
+          answer: "Gender",
+        },
+        {
+          question:
+            "A personal pronoun refers to a specific person or thing and changes its form to indicate person, number, gender, and:",
+          options: ["Tense", "Case", "Voice", "Mood"],
+          answer: "Case",
+        },
+        {
+          question: "A relative pronoun is used to:",
+          options: [
+            "Ask questions",
+            "Refer back to the subject of the clause",
+            "Link one phrase or clause to another phrase or clause",
+            "Point to and identify a noun",
+          ],
+          answer: "Link one phrase or clause to another phrase or clause",
+        },
+        {
+          question: "Which of the following is an indefinite pronoun?",
+          options: ["who", "which", "everybody", "himself"],
+          answer: "everybody",
+        },
+        {
+          question:
+            "A preposition links nouns, pronouns, and phrases to other words. The word or phrase that the preposition introduces is called the:",
+          options: [
+            "Object of the preposition",
+            "Subject of the preposition",
+            "Complement of the preposition",
+            "Modifier of the preposition",
+          ],
+          answer: "Object of the preposition",
+        },
+        {
+          question:
+            "Coordinating conjunctions join individual words, phrases, and independent clauses. Which of the following is a coordinating conjunction?",
+          options: ["Although", "Because", "Yet", "Since"],
+          answer: "Yet",
+        },
+        {
+          question:
+            "Correlative conjunctions always appear in pairs. Which of the following is a pair of correlative conjunctions?",
+          options: [
+            "if … then",
+            "both … and",
+            "because … therefore",
+            "when … while",
+          ],
+          answer: "both … and",
+        },
+        {
+          question:
+            "An interjection is added to a sentence to convey emotion. According to Lecture 10, interjections are uncommon in:",
+          options: [
+            "Spoken English",
+            "Formal academic prose, except in direct quotations",
+            "Fictional dialogue",
+            "Informal personal letters",
+          ],
+          answer: "Formal academic prose, except in direct quotations",
+        },
+
+        // ════════════════════════════════════════════
+        // LECTURE 11 – BASIC CLAUSE PATTERNS
+        // ════════════════════════════════════════════
+        {
+          question:
+            "According to Lecture 11, a clause is a grammatical unit that includes a subject, a predicate, and:",
+          options: [
+            "At least one object",
+            "Expresses a proposition (idea)",
+            "Must contain an adverb",
+            "Must be an independent clause",
+          ],
+          answer: "Expresses a proposition (idea)",
+        },
+        {
+          question:
+            "Which of the following represents the correct Language Chain order from smallest to largest unit?",
+          options: [
+            "Word → Morpheme → Grapheme → Phrase → Clause",
+            "Grapheme → Morpheme → Word → Phrase → Clause",
+            "Morpheme → Grapheme → Word → Clause → Phrase",
+            "Clause → Phrase → Word → Morpheme → Grapheme",
+          ],
+          answer: "Grapheme → Morpheme → Word → Phrase → Clause",
+        },
+        {
+          question:
+            "The sentence 'Jinnah inspired everyone' follows which basic clause pattern?",
+          options: ["S + V", "S + V + C", "S + V + O", "S + V + IO + DO"],
+          answer: "S + V + O",
+        },
+        {
+          question:
+            "The sentence 'You are beautiful' follows which basic clause pattern?",
+          options: ["S + V", "S + V + C", "S + V + O", "S + V + O + OC"],
+          answer: "S + V + C",
+        },
+        {
+          question:
+            "The sentence 'Ali gave his friend a ruby ring' follows which basic clause pattern?",
+          options: ["S + V", "S + V + C", "S + V + O", "S + V + IO + DO"],
+          answer: "S + V + IO + DO",
+        },
+        {
+          question:
+            "The sentence 'Ali calls his Mom a saint' follows which basic clause pattern?",
+          options: [
+            "S + V + C",
+            "S + V + O",
+            "S + V + IO + DO",
+            "S + V + O + OC",
+          ],
+          answer: "S + V + O + OC",
+        },
+        {
+          question:
+            "The sentence 'The children played' follows which basic clause pattern?",
+          options: ["S + V + C", "S + V", "S + V + O", "S + V + IO + DO"],
+          answer: "S + V",
+        },
+
+        // ════════════════════════════════════════════
+        // LECTURE 12 – ACTIVE AND PASSIVE VOICE
+        // ════════════════════════════════════════════
+        {
+          question:
+            "In the active voice, which part of the sentence receives the action of the verb?",
+          options: ["Subject", "Object", "Complement", "Predicate"],
+          answer: "Object",
+        },
+        {
+          question:
+            "In the passive voice, which part of the sentence receives the action of the verb?",
+          options: ["Object", "Subject", "Complement", "Indirect object"],
+          answer: "Subject",
+        },
+        {
+          question: "What is the correct structure of the passive voice?",
+          options: [
+            "Subject + main verb + auxiliary verb",
+            "Subject + auxiliary verb (be) + main verb (past participle)",
+            "Subject + past participle + object",
+            "Object + auxiliary verb + subject",
+          ],
+          answer: "Subject + auxiliary verb (be) + main verb (past participle)",
+        },
+        {
+          question:
+            "In the passive voice, the main verb is ALWAYS in which form?",
+          options: [
+            "Present participle",
+            "Infinitive",
+            "Past participle",
+            "Simple past",
+          ],
+          answer: "Past participle",
+        },
+        {
+          question:
+            "Which of the following is the correct passive form of 'I wash it' in the present simple tense?",
+          options: [
+            "It was washed.",
+            "It is being washed.",
+            "It is washed.",
+            "It has been washed.",
+          ],
+          answer: "It is washed.",
+        },
+        {
+          question:
+            "Which of the following is the correct passive form of 'I am washing it' (present continuous)?",
+          options: [
+            "It is washed.",
+            "It is being washed.",
+            "It was being washed.",
+            "It has been washed.",
+          ],
+          answer: "It is being washed.",
+        },
+        {
+          question:
+            "Which of the following is the correct passive form of 'I have washed it' (present perfect)?",
+          options: [
+            "It is washed.",
+            "It was washed.",
+            "It has been washed.",
+            "It had been washed.",
+          ],
+          answer: "It has been washed.",
+        },
+        {
+          question:
+            "We use the passive voice when we do NOT know the active subject. Which of the following is an example of this use?",
+          options: [
+            "Cats eat fish.",
+            "Everybody drinks water.",
+            "My wallet has been stolen.",
+            "President Kennedy was killed by Lee Harvey Oswald.",
+          ],
+          answer: "My wallet has been stolen.",
+        },
+        {
+          question:
+            "The Present Perfect tense is used in which of the following situations?",
+          options: [
+            "To describe a completed action at a definite past time",
+            "To describe a past action that took place over a period of time",
+            "To express habitual or continued action, and events at an unspecified time in the past",
+            "To express an action that will be completed by a future time",
+          ],
+          answer:
+            "To express habitual or continued action, and events at an unspecified time in the past",
+        },
+        {
+          question:
+            "The Past Perfect tense is used to describe a past event completed BEFORE another event in the past. Which sentence correctly uses the Past Perfect?",
+          options: [
+            "When I arrived home, he already called.",
+            "When I arrived home, he has already called.",
+            "When I arrived home, he had already called.",
+            "When I arrive home, he would have already called.",
+          ],
+          answer: "When I arrived home, he had already called.",
+        },
+
+        // ════════════════════════════════════════════
+        // LECTURE 13 – MODIFIERS AND SENTENCE TYPES
+        // ════════════════════════════════════════════
+        {
+          question: "In Lecture 13, modifiers are described as the parts that:",
+          options: [
+            "Form the basic subject and predicate of a clause",
+            "Modify or describe the kernel (basic clause)",
+            "Replace nouns in a sentence",
+            "Connect independent clauses",
+          ],
+          answer: "Modify or describe the kernel (basic clause)",
+        },
+        {
+          question:
+            "Which of the following is NOT listed as a type of modifier in Lecture 13?",
+          options: ["Adjectives", "Adverbs", "Appositives", "Conjunctions"],
+          answer: "Conjunctions",
+        },
+        {
+          question: "Appositive modifiers are defined as:",
+          options: [
+            "Direction or relationship words",
+            "Noun phrases that follow and describe other nouns",
+            "Words that modify verbs or give more meaning to verbs",
+            "Words that modify the meaning of a noun by providing more specific information",
+          ],
+          answer: "Noun phrases that follow and describe other nouns",
+        },
+        {
+          question:
+            "In the sentence 'George Washington, the first president of the United States, loved peanut soup,' which type of modifier is the bold phrase?",
+          options: [
+            "Adjective modifier",
+            "Adverb modifier",
+            "Prepositional modifier",
+            "Appositive modifier",
+          ],
+          answer: "Appositive modifier",
+        },
+        {
+          question:
+            "The adverb 'loudly' in 'They sucked their thumbs loudly' is an adverb of:",
+          options: ["Time", "Place", "Manner", "Frequency"],
+          answer: "Manner",
+        },
+        {
+          question:
+            "Which sentence type consists of ONE independent clause only?",
+          options: ["Compound", "Complex", "Simple", "Compound-complex"],
+          answer: "Simple",
+        },
+        {
+          question: "A compound sentence consists of:",
+          options: [
+            "One independent clause with one or more subordinate clauses",
+            "Two or more independent clauses joined by coordinating conjunctions",
+            "At least two independent clauses and at least one subordinating clause",
+            "One clause with a subject and no predicate",
+          ],
+          answer:
+            "Two or more independent clauses joined by coordinating conjunctions",
+        },
+        {
+          question:
+            "Which of the following sentences is an example of a COMPLEX sentence?",
+          options: [
+            "One arrow is easily broken, but you can't break a bundle of ten.",
+            "If you scatter thorns, don't go bare foot.",
+            "Bob went to the store and Sue went to the office.",
+            "Tell me what you eat and I will tell you what you are.",
+          ],
+          answer: "If you scatter thorns, don't go bare foot.",
+        },
+        {
+          question: "A compound-complex sentence contains:",
+          options: [
+            "Only one independent clause",
+            "Two subordinating clauses and no independent clause",
+            "At least two independent clauses and at least one subordinating clause",
+            "One independent clause and one subordinating clause",
+          ],
+          answer:
+            "At least two independent clauses and at least one subordinating clause",
+        },
+        {
+          question:
+            "A sentence that issues requests or commands is classified as:",
+          options: [
+            "Declarative",
+            "Interrogative",
+            "Exclamatory",
+            "Imperative",
+          ],
+          answer: "Imperative",
+        },
+        {
+          question:
+            "Which subordinator is used to express CONDITION in a complex sentence?",
+          options: ["Because", "Although", "Where", "If"],
+          answer: "If",
+        },
+        {
+          question:
+            "In a complex sentence, the subordinating clause beginning with a subordinator is called a:",
+          options: [
+            "Coordinating clause",
+            "Independent clause",
+            "Subordinate (dependent) clause",
+            "Compound clause",
+          ],
+          answer: "Subordinate (dependent) clause",
+        },
+
+        // ════════════════════════════════════════════
+        // LECTURE 14 – REPORTED SPEECH
+        // ════════════════════════════════════════════
+        {
+          question: "Indirect speech is also referred to as:",
+          options: [
+            "Direct speech",
+            "Reported speech",
+            "Passive speech",
+            "Conditional speech",
+          ],
+          answer: "Reported speech",
+        },
+        {
+          question:
+            "If the reporting verb (e.g., 'said') is in the past tense, the reported clause will be in a past form that is:",
+          options: [
+            "The same tense as the original",
+            "One step further into the future",
+            "One step back into the past from the original",
+            "Always the simple past",
+          ],
+          answer: "One step back into the past from the original",
+        },
+        {
+          question:
+            "When reporting a GENERAL TRUTH, the tense in the reported clause is:",
+          options: [
+            "Shifted one step back into the past",
+            "Changed to the future tense",
+            "Retained in the present tense",
+            "Always changed to past perfect",
+          ],
+          answer: "Retained in the present tense",
+        },
+        {
+          question:
+            "In reported speech, the direct speech 'I like you' (He said) becomes:",
+          options: [
+            "He said that he liked me.",
+            "He said that I liked you.",
+            "He said that he likes me.",
+            "He said that I like him.",
+          ],
+          answer: "He said that he liked me.",
+        },
+        {
+          question: "In reported speech, the word 'here' changes to:",
+          options: ["Now", "Then", "There", "That"],
+          answer: "There",
+        },
+        {
+          question: "In reported speech, the word 'tomorrow' changes to:",
+          options: [
+            "That day",
+            "The following day",
+            "The preceding day",
+            "Now",
+          ],
+          answer: "The following day",
+        },
+        {
+          question: "In reported speech, the word 'yesterday' changes to:",
+          options: [
+            "That day",
+            "The following day",
+            "The preceding day or previous day",
+            "Then",
+          ],
+          answer: "The preceding day or previous day",
+        },
+        {
+          question: "In reported speech, the modal verb 'can' changes to:",
+          options: ["Would", "Might", "Could", "Should"],
+          answer: "Could",
+        },
+        {
+          question:
+            "In reported speech, the modal verb 'shall/will' changes to:",
+          options: ["Could/might", "Should/would", "Were", "Had"],
+          answer: "Should/would",
+        },
+        {
+          question:
+            "When reporting a YES/NO question in indirect speech, the reported question is connected using:",
+          options: ["That", "Which", "If", "Whether or if"],
+          answer: "Whether or if",
+        },
+        {
+          question:
+            "The direct speech 'Do you want to come with me?' reported by 'She asked' becomes:",
+          options: [
+            "She asked if she wanted to come with me.",
+            "She asked me if I wanted to come with her.",
+            "She asked whether you want to come with her.",
+            "She asked did I want to come with her.",
+          ],
+          answer: "She asked me if I wanted to come with her.",
+        },
+        {
+          question:
+            "In the rule for pronoun change in reported speech, the SECOND person pronoun changes according to the:",
+          options: ["Subject", "Object", "Reporting verb", "Tense"],
+          answer: "Object",
+        },
+        {
+          question:
+            "The direct speech 'He said, I will accept your offer' becomes:",
+          options: [
+            "He said that he will accept my offer.",
+            "He told me that he would accept my offer.",
+            "He said that I would accept your offer.",
+            "He told him that he would accept his offer.",
+          ],
+          answer: "He told me that he would accept my offer.",
+        },
+
+        // ════════════════════════════════════════════
+        // LECTURE 15 – GRAMMATICAL SENTENCE ISSUES
+        // ════════════════════════════════════════════
+        {
+          question:
+            "Rule G1-a states that the verb must agree with its SUBJECT, not with a word that comes between. Which sentence correctly applies this rule?",
+          options: [
+            "High levels of air pollution causes damage.",
+            "High levels of air pollution cause damage.",
+            "High levels of air pollution is causing damage.",
+            "High levels of air pollution were causing damage always.",
+          ],
+          answer: "High levels of air pollution cause damage.",
+        },
+        {
+          question:
+            "Rule G1-b states that most compound subjects connected by 'and' should be treated as:",
+          options: [
+            "Singular",
+            "Plural",
+            "Context-dependent",
+            "Always third person",
+          ],
+          answer: "Plural",
+        },
+        {
+          question:
+            "According to Rule G1-c, with compound subjects connected by 'or' or 'nor', the verb should agree with:",
+          options: [
+            "The first subject listed",
+            "Both subjects equally",
+            "The part of the subject nearer to the verb",
+            "Always the plural form",
+          ],
+          answer: "The part of the subject nearer to the verb",
+        },
+        {
+          question:
+            "Rule G1-d states that most indefinite pronouns should be treated as:",
+          options: ["Plural", "Singular", "Collective", "Context-dependent"],
+          answer: "Singular",
+        },
+        {
+          question:
+            "According to Rule G1-d, which sentence correctly applies subject-verb agreement with an indefinite pronoun?",
+          options: [
+            "Everyone on the team support the coach.",
+            "Everyone on the team supports the coach.",
+            "Everyone on the team are supporting the coach.",
+            "Everyone on the team were to support the coach.",
+          ],
+          answer: "Everyone on the team supports the coach.",
+        },
+        {
+          question:
+            "Rule G1-e states that collective nouns should be treated as singular UNLESS the meaning is clearly plural. Which sentence treats a collective noun as plural?",
+          options: [
+            "The class respects the teacher.",
+            "The scout troop meets in our basement.",
+            "The class are debating among themselves.",
+            "The jury has reached a verdict.",
+          ],
+          answer: "The class are debating among themselves.",
+        },
+        {
+          question:
+            "Rule G1-i states that words like 'mathematics', 'physics', 'statistics', 'athletics', and 'news' are usually:",
+          options: [
+            "Plural in form and plural in agreement",
+            "Plural in form but singular in agreement",
+            "Singular in form and singular in agreement",
+            "Treated as collective nouns",
+          ],
+          answer: "Plural in form but singular in agreement",
+        },
+        {
+          question:
+            "According to Rule G3-a on pronoun-antecedent agreement, compound antecedents joined by 'and' should be treated as:",
+          options: [
+            "Singular",
+            "Plural",
+            "Third person singular",
+            "Context-dependent",
+          ],
+          answer: "Plural",
+        },
+        {
+          question:
+            "In Lecture 15, 'ambiguous reference' in pronouns occurs when:",
+          options: [
+            "The pronoun is in the wrong case",
+            "The pronoun could refer to two possible antecedents",
+            "The pronoun is missing from the sentence",
+            "The pronoun is used instead of a noun",
+          ],
+          answer: "The pronoun could refer to two possible antecedents",
+        },
+        {
+          question:
+            "The sentence 'Tom told James that he had won the lottery' is an example of:",
+          options: [
+            "Correct pronoun usage",
+            "Ambiguous pronoun reference",
+            "Wrong pronoun case",
+            "A double negative",
+          ],
+          answer: "Ambiguous pronoun reference",
+        },
+        {
+          question:
+            "The subjective pronouns listed in Lecture 15 include all of the following EXCEPT:",
+          options: ["I", "We", "He", "Him"],
+          answer: "Him",
+        },
+        {
+          question:
+            "Rule G3-d on using 'who' and 'whom': in the sentence 'Whom did the committee select?', 'whom' is correct because it is used as the:",
+          options: [
+            "Subject of the clause",
+            "Object of the verb",
+            "Subject complement",
+            "Reflexive pronoun",
+          ],
+          answer: "Object of the verb",
+        },
+        {
+          question:
+            "Rule G1-h states that 'who', 'which', and 'that' take verbs that agree with their:",
+          options: ["Objects", "Antecedents", "Subjects", "Predicates"],
+          answer: "Antecedents",
+        },
+        {
+          question:
+            "Rule G1-j states that titles of works and words mentioned as words are:",
+          options: [
+            "Always plural",
+            "Context-dependent",
+            "Singular",
+            "Treated as collective nouns",
+          ],
+          answer: "Singular",
+        },
+      ];
+      quizData.sort(() => Math.random() - 0.5);
+      let currentQuestion = 0;
+      let score = 0;
+
+      const userAnswers = [];
+
+      const questionEl = document.getElementById("question");
+      const optionsEl = document.getElementById("options");
+      const nextBtn = document.getElementById("nextBtn");
+      const submitBtn = document.getElementById("submitBtn");
+      const showResultBtn = document.getElementById("showResultBtn");
+      const resultBox = document.getElementById("resultBox");
+      const questionNumber = document.getElementById("questionNumber");
+
+      function loadQuestion() {
+        resetState();
+
+        let currentQuiz = quizData[currentQuestion];
+
+        questionNumber.innerHTML = `Question ${currentQuestion + 1} of ${quizData.length}`;
+
+        questionEl.innerHTML = currentQuiz.question;
+
+        currentQuiz.options.forEach((option) => {
+          const button = document.createElement("button");
+
+          button.innerHTML = option;
+
+          button.classList.add("option");
+
+          button.addEventListener("click", () => selectOption(button, option));
+
+          optionsEl.appendChild(button);
+        });
+      }
+
+      function resetState() {
+        optionsEl.innerHTML = "";
+      }
+
+      function selectOption(button, option) {
+        const buttons = document.querySelectorAll(".option");
+
+        buttons.forEach((btn) => btn.classList.remove("selected"));
+
+        button.classList.add("selected");
+
+        userAnswers[currentQuestion] = option;
+      }
+
+      nextBtn.addEventListener("click", () => {
+        if (userAnswers[currentQuestion] == null) {
+          alert("Please select an answer");
+
+          return;
+        }
+
+        currentQuestion++;
+
+        if (currentQuestion < quizData.length) {
+          loadQuestion();
+        } else {
+          nextBtn.style.display = "none";
+
+          submitBtn.style.display = "inline-block";
+
+          questionNumber.innerHTML = "";
+
+          questionEl.innerHTML = "Quiz Completed. Click Submit Quiz";
+
+          optionsEl.innerHTML = "";
+        }
+      });
+
+      submitBtn.addEventListener("click", () => {
+        score = 0;
+
+        quizData.forEach((q, index) => {
+          if (userAnswers[index] === q.answer) {
+            score++;
+          }
+        });
+
+        let percentage = ((score / quizData.length) * 100).toFixed(2);
+
+        resultBox.innerHTML = `
+          Your Score: ${score} / ${quizData.length}
+          <br><br>
+          Percentage: ${percentage}%
+          `;
+
+        submitBtn.style.display = "none";
+
+        showResultBtn.style.display = "inline-block";
+      });
+
+      showResultBtn.addEventListener("click", () => {
+        let resultHTML = "";
+
+        quizData.forEach((q, index) => {
+          let userAns = userAnswers[index];
+
+          let isCorrect = userAns === q.answer;
+
+          resultHTML += `
+
+          <div style="
+          background:#334155;
+          padding:20px;
+          border-radius:12px;
+          margin-top:20px;
+          text-align:left;
+          ">
+
+          <h3>Q${index + 1}: ${q.question}</h3>
+
+          <p style="margin-top:10px;">
+          Your Answer:
+          <span style="color:${isCorrect ? "#22c55e" : "#ef4444"}">
+          ${userAns}
+          </span>
+          </p>
+
+          <p style="margin-top:8px;">
+          Correct Answer:
+          <span style="color:#22c55e">
+          ${q.answer}
+          </span>
+          </p>
+
+          </div>
+
+          `;
+        });
+
+        document.getElementById("quizArea").innerHTML = resultHTML;
+      });
+
+      loadQuestion();
+    </script>
+  </body>
+</html>
