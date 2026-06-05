@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eng001 by Muhammad Moeez</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        background: #0f172a;
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .quiz-box {
+        width: 100%;
+        max-width: 900px;
+        background: #1e293b;
+        padding: 30px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #38bdf8;
+      }
+
+      #questionNumber {
+        margin-bottom: 10px;
+        color: #94a3b8;
+      }
+
+      #question {
+        font-size: 24px;
+        line-height: 1.5;
+        margin-bottom: 25px;
+      }
+
+      .option {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 10px;
+        background: #334155;
+        color: white;
+        font-size: 16px;
+        text-align: left;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .option:hover {
+        background: #475569;
+      }
+
+      .selected {
+        background: #0ea5e9 !important;
+      }
+
+      .correct {
+        background: #16a34a !important;
+      }
+
+      .wrong {
+        background: #dc2626 !important;
+      }
+
+      #nextBtn,
+      #submitBtn,
+      #showResultBtn {
+        margin-top: 20px;
+        padding: 14px 25px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+      }
+
+      #nextBtn {
+        background: #0ea5e9;
+      }
+
+      #submitBtn {
+        background: #22c55e;
+        display: none;
+      }
+
+      #showResultBtn {
+        background: #f59e0b;
+        display: none;
+      }
+
+      #resultBox {
+        margin-top: 25px;
+        text-align: center;
+        font-size: 28px;
+      }
+      .header {
+        width: 100%;
+        background: #1e293b;
+        padding: 18px 30px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+      }
+
+      .nav-list {
+        list-style: none;
+        display: grid;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .nav-list li a {
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        transition: 0.3s;
+      }
+
+      .nav-list li a:hover {
+        color: #38bdf8;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .header {
+          padding: 15px 20px;
+        }
+
+        .nav-list li a {
+          font-size: 18px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header {
+          padding: 12px 15px;
+        }
+
+        .nav-list li a {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="quiz-box">
+      <header class="header">
+        <nav>
+          <ul class="nav-list">
+            <li>
+              <a href="../Past Quiz/index.html">"Past Quiz"</a>
+            </li>
+            <li>
+              <a href="../class quiz/index.html">"Lesson 6-15 "</a>
+            </li>
+            <li>
+              <a href="../index.html">"Handouts Quiz "</a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <h1>Eng001 Handouts Quiz</h1>
+
+      <div id="quizArea">
+        <div id="questionNumber"></div>
+
+        <div id="question"></div>
+
+        <div id="options"></div>
+
+        <button id="nextBtn">Next Question</button>
+
+        <button id="submitBtn">Submit Quiz</button>
+
+        <button id="showResultBtn">Show Result</button>
+
+        <div id="resultBox"></div>
+      </div>
+    </div>
+
+    <script>
+      const quizData = [
+        {
+          question:
+            "Indirect narration of 'Ali said, \"I am studying for my ENG001 exam.\"' is:",
+
+          options: [
+            "Ali said that he was studying for his ENG001 exam.",
+
+            "Ali said that he is studying for his ENG001 exam.",
+
+            "Ali said that he had studied for his ENG001 exam.",
+
+            "Ali said that he studies for his ENG001 exam.",
+          ],
+
+          answer: "Ali said that he was studying for his ENG001 exam.",
+        },
+
+        {
+          question:
+            "Indirect narration of 'The teacher said, \"Do you understand the lesson?\"' is:",
+
+          options: [
+            "The teacher asked if I understood the lesson.",
+
+            "The teacher asked do I understand the lesson.",
+
+            "The teacher said if I understand the lesson.",
+
+            "The teacher asked that I understood the lesson.",
+          ],
+
+          answer: "The teacher asked if I understood the lesson.",
+        },
+
+        {
+          question:
+            "Identify the underlined group of words: 'The boy who won the race is my cousin.'",
+
+          options: [
+            "Noun Phrase",
+
+            "Adjective Clause",
+
+            "Adverb Clause",
+
+            "Verb Phrase",
+          ],
+
+          answer: "Adjective Clause",
+        },
+
+        {
+          question:
+            "Which sentence is in the Present Perfect Continuous Tense?",
+
+          options: [
+            "She has been reading a novel for two hours.",
+
+            "She has read a novel.",
+
+            "She is reading a novel.",
+
+            "She had been reading a novel.",
+          ],
+
+          answer: "She has been reading a novel for two hours.",
+        },
+
+        {
+          question:
+            "Indirect narration of 'Sara said, \"I have completed my assignment.\"' is:",
+
+          options: [
+            "Sara said that she completed her assignment.",
+
+            "Sara said that she had completed her assignment.",
+
+            "Sara said that she has completed her assignment.",
+
+            "Sara said that she was completing her assignment.",
+          ],
+
+          answer: "Sara said that she had completed her assignment.",
+        },
+
+        {
+          question: "Which of the following is a Phrase?",
+
+          options: [
+            "because he was tired",
+
+            "when the bell rang",
+
+            "in the morning",
+
+            "who lives next door",
+          ],
+
+          answer: "in the morning",
+        },
+
+        {
+          question: "Choose the sentence in Future Perfect Tense:",
+
+          options: [
+            "They will finish the project.",
+
+            "They will be finishing the project.",
+
+            "They will have finished the project by Friday.",
+
+            "They have finished the project.",
+          ],
+
+          answer: "They will have finished the project by Friday.",
+        },
+
+        {
+          question: "Indirect narration of 'He said, \"Please help me.\"' is:",
+
+          options: [
+            "He requested me to help him.",
+
+            "He said please help me.",
+
+            "He asked that help me.",
+
+            "He requested that I helped him.",
+          ],
+
+          answer: "He requested me to help him.",
+        },
+
+        {
+          question:
+            "Identify the clause in the sentence: 'If it rains, we will stay at home.'",
+
+          options: [
+            "Noun Clause",
+
+            "Adjective Clause",
+
+            "Adverb Clause",
+
+            "Phrase",
+          ],
+
+          answer: "Adverb Clause",
+        },
+
+        {
+          question:
+            "Which tense is used in the sentence 'The train had left before we arrived'?",
+
+          options: [
+            "Past Continuous",
+
+            "Past Perfect",
+
+            "Present Perfect",
+
+            "Future Perfect",
+          ],
+
+          answer: "Past Perfect",
+        },
+
+        {
+          question:
+            "Indirect narration of 'The officer said, \"Stand up!\"' is:",
+
+          options: [
+            "The officer ordered them to stand up.",
+
+            "The officer said stand up.",
+
+            "The officer told that stand up.",
+
+            "The officer asked them standing up.",
+          ],
+
+          answer: "The officer ordered them to stand up.",
+        },
+
+        {
+          question: "Which of the following is a Noun Clause?",
+
+          options: [
+            "because he was late",
+
+            "who won the match",
+
+            "what she said",
+
+            "in the room",
+          ],
+
+          answer: "what she said",
+        },
+
+        {
+          question: "Choose the sentence in Past Continuous Tense:",
+
+          options: [
+            "He was watching TV when I called.",
+
+            "He watched TV yesterday.",
+
+            "He has watched TV.",
+
+            "He had watched TV.",
+          ],
+
+          answer: "He was watching TV when I called.",
+        },
+
+        {
+          question:
+            "Indirect narration of 'She said, \"Where do you live?\"' is:",
+
+          options: [
+            "She asked where I lived.",
+
+            "She asked where do I live.",
+
+            "She said where I lived.",
+
+            "She asked where I live.",
+          ],
+
+          answer: "She asked where I lived.",
+        },
+
+        {
+          question:
+            "Identify the phrase in the sentence: 'The man with a black hat is my uncle.'",
+
+          options: ["The man", "with a black hat", "is my uncle", "my uncle"],
+
+          answer: "with a black hat",
+        },
+
+        {
+          question: "Which sentence shows Present Continuous Tense?",
+
+          options: [
+            "I read books daily.",
+
+            "I have read the book.",
+
+            "I am reading a book.",
+
+            "I had read the book.",
+          ],
+
+          answer: "I am reading a book.",
+        },
+
+        {
+          question:
+            "Indirect narration of 'He said, \"I will visit Lahore tomorrow.\"' is:",
+
+          options: [
+            "He said that he would visit Lahore the next day.",
+
+            "He said that he will visit Lahore tomorrow.",
+
+            "He said that he visited Lahore the next day.",
+
+            "He said that he would visit Lahore tomorrow.",
+          ],
+
+          answer: "He said that he would visit Lahore the next day.",
+        },
+
+        {
+          question: "Which of the following contains an Adjective Clause?",
+
+          options: [
+            "I know that he is honest.",
+
+            "The book that you gave me is interesting.",
+
+            "When he arrived, we left.",
+
+            "Walking in the park is relaxing.",
+          ],
+
+          answer: "The book that you gave me is interesting.",
+        },
+
+        {
+          question: "The tense of 'She has lived here for ten years' is:",
+
+          options: [
+            "Present Continuous",
+
+            "Present Perfect",
+
+            "Past Perfect",
+
+            "Future Perfect",
+          ],
+
+          answer: "Present Perfect",
+        },
+
+        {
+          question:
+            "Indirect narration of 'Mother said, \"Don't waste your time.\"' is:",
+
+          options: [
+            "Mother advised me not to waste my time.",
+
+            "Mother said don't waste your time.",
+
+            "Mother ordered me wasting my time.",
+
+            "Mother asked that I don't waste my time.",
+          ],
+
+          answer: "Mother advised me not to waste my time.",
+        },
+
+        {
+          question: "Which group of words is a Clause?",
+
+          options: [
+            "under the table",
+
+            "after the meeting",
+
+            "because she was ill",
+
+            "in the garden",
+          ],
+
+          answer: "because she was ill",
+        },
+
+        {
+          question: "Choose the sentence in Future Continuous Tense:",
+
+          options: [
+            "I will study tomorrow.",
+
+            "I will be studying at 8 p.m.",
+
+            "I will have studied.",
+
+            "I am studying tomorrow.",
+          ],
+
+          answer: "I will be studying at 8 p.m.",
+        },
+
+        {
+          question:
+            "Indirect narration of 'Ahmed said, \"We were playing cricket.\"' is:",
+
+          options: [
+            "Ahmed said that they had been playing cricket.",
+
+            "Ahmed said that they were playing cricket.",
+
+            "Ahmed said that they played cricket.",
+
+            "Ahmed said that they have been playing cricket.",
+          ],
+
+          answer: "Ahmed said that they had been playing cricket.",
+        },
+
+        {
+          question:
+            "Identify the type of clause: 'That he passed the exam surprised everyone.'",
+
+          options: [
+            "Noun Clause",
+
+            "Adverb Clause",
+
+            "Adjective Clause",
+
+            "Phrase",
+          ],
+
+          answer: "Noun Clause",
+        },
+
+        {
+          question: "Which sentence is in Past Perfect Continuous Tense?",
+
+          options: [
+            "He had been working there for five years.",
+
+            "He was working there.",
+
+            "He has been working there.",
+
+            "He worked there.",
+          ],
+
+          answer: "He had been working there for five years.",
+        },
+
+        {
+          question:
+            "Indirect narration of 'The student said, \"Can I leave the room?\"' is:",
+
+          options: [
+            "The student asked if he could leave the room.",
+
+            "The student said can I leave the room.",
+
+            "The student asked can he leave the room.",
+
+            "The student asked that he could leave the room.",
+          ],
+
+          answer: "The student asked if he could leave the room.",
+        },
+
+        {
+          question: "Which of the following is a Verb Phrase?",
+
+          options: [
+            "has been working",
+
+            "under the bridge",
+
+            "because he came",
+
+            "the tall building",
+          ],
+
+          answer: "has been working",
+        },
+
+        {
+          question: "The sentence 'They are playing football now.' is in:",
+
+          options: [
+            "Simple Present",
+
+            "Present Continuous",
+
+            "Present Perfect",
+
+            "Past Continuous",
+          ],
+
+          answer: "Present Continuous",
+        },
+
+        {
+          question:
+            "Indirect narration of 'She said, \"Had you finished the work?\"' is:",
+
+          options: [
+            "She asked if I had finished the work.",
+
+            "She asked had I finished the work.",
+
+            "She said if I finished the work.",
+
+            "She asked if I finished the work.",
+          ],
+
+          answer: "She asked if I had finished the work.",
+        },
+
+        {
+          question: "Which sentence contains both a Phrase and a Clause?",
+
+          options: [
+            "The girl is beautiful.",
+
+            "After the meeting, we left because it was late.",
+
+            "Running is good exercise.",
+
+            "The book is on the table.",
+          ],
+
+          answer: "After the meeting, we left because it was late.",
+        },
+      ];
+
+      quizData.sort(() => Math.random() - 0.5);
+
+      let currentQuestion = 0;
+      let score = 0;
+
+      const userAnswers = [];
+
+      const questionEl = document.getElementById("question");
+      const optionsEl = document.getElementById("options");
+      const nextBtn = document.getElementById("nextBtn");
+      const submitBtn = document.getElementById("submitBtn");
+      const showResultBtn = document.getElementById("showResultBtn");
+      const resultBox = document.getElementById("resultBox");
+      const questionNumber = document.getElementById("questionNumber");
+
+      function loadQuestion() {
+        resetState();
+
+        let currentQuiz = quizData[currentQuestion];
+
+        questionNumber.innerHTML = `Question ${currentQuestion + 1} of ${quizData.length}`;
+
+        questionEl.innerHTML = currentQuiz.question;
+
+        currentQuiz.options.forEach((option) => {
+          const button = document.createElement("button");
+
+          button.innerHTML = option;
+
+          button.classList.add("option");
+
+          button.addEventListener("click", () => selectOption(button, option));
+
+          optionsEl.appendChild(button);
+        });
+      }
+
+      function resetState() {
+        optionsEl.innerHTML = "";
+      }
+
+      function selectOption(button, option) {
+        const buttons = document.querySelectorAll(".option");
+
+        buttons.forEach((btn) => btn.classList.remove("selected"));
+
+        button.classList.add("selected");
+
+        userAnswers[currentQuestion] = option;
+      }
+
+      nextBtn.addEventListener("click", () => {
+        if (userAnswers[currentQuestion] == null) {
+          alert("Please select an answer");
+
+          return;
+        }
+
+        currentQuestion++;
+
+        if (currentQuestion < quizData.length) {
+          loadQuestion();
+        } else {
+          nextBtn.style.display = "none";
+
+          submitBtn.style.display = "inline-block";
+
+          questionNumber.innerHTML = "";
+
+          questionEl.innerHTML = "Quiz Completed. Click Submit Quiz";
+
+          optionsEl.innerHTML = "";
+        }
+      });
+
+      submitBtn.addEventListener("click", () => {
+        score = 0;
+
+        quizData.forEach((q, index) => {
+          if (userAnswers[index] === q.answer) {
+            score++;
+          }
+        });
+
+        let percentage = ((score / quizData.length) * 100).toFixed(2);
+
+        resultBox.innerHTML = `
+          Your Score: ${score} / ${quizData.length}
+          <br><br>
+          Percentage: ${percentage}%
+          `;
+
+        submitBtn.style.display = "none";
+
+        showResultBtn.style.display = "inline-block";
+      });
+
+      showResultBtn.addEventListener("click", () => {
+        let resultHTML = "";
+
+        quizData.forEach((q, index) => {
+          let userAns = userAnswers[index];
+
+          let isCorrect = userAns === q.answer;
+
+          resultHTML += `
+
+          <div style="
+          background:#334155;
+          padding:20px;
+          border-radius:12px;
+          margin-top:20px;
+          text-align:left;
+          ">
+
+          <h3>Q${index + 1}: ${q.question}</h3>
+
+          <p style="margin-top:10px;">
+          Your Answer:
+          <span style="color:${isCorrect ? "#22c55e" : "#ef4444"}">
+          ${userAns}
+          </span>
+          </p>
+
+          <p style="margin-top:8px;">
+          Correct Answer:
+          <span style="color:#22c55e">
+          ${q.answer}
+          </span>
+          </p>
+
+          </div>
+
+          `;
+        });
+
+        document.getElementById("quizArea").innerHTML = resultHTML;
+      });
+
+      loadQuestion();
+    </script>
+  </body>
+</html>
